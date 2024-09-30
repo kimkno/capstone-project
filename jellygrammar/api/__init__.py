@@ -1,0 +1,3 @@
+GCP_PROJECT_ID = ''
+GCP_FIRESTORE_DATABASE = 'capstone-grammar'
+GCP_FIRESTORE_USER_DASHBOARD_COLLECTION = 'user_dashboard'

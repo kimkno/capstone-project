@@ -1,0 +1,19 @@
+{
+    "content": "John, who was very hungry, decided to make a apple pie. He goes to the nearest store and look for the freshest apples they had.",
+    "translate_kr": "배가 고팠던 존은 사과 파이를 만들기로 결심했다. 그는 가장 가까운 가게로 가서 그들이 가진 가장 신선한 사과를 찾았다.",
+    "analysis": [
+        {
+            "content":"John, who was very hungry, decided to make a apple pie.",
+        }
+    ],
+    "grammar_analysis": {
+        "vocab": ["John", "who", "was", "very", "hungry", "decided", "to", "make", "a", "apple", "pie"],
+        "verbs": ["was", "decided", "make"],
+        "nouns": ["John", "apple", "pie"],
+        "adjectives": ["very", "hungry"],
+        "adverbs": ["very"],
+        "prepositions": ["to"],
+        "tense": "past",
+        "sentence_structure": "SVO"
+    } 
+}
