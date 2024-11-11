@@ -78,84 +78,84 @@ curl -X POST "https://3c4poujwac.execute-api.ap-northeast-2.amazonaws.com/defaul
 ```json
 # Sample Response
 {
-  "kr": "그는 가장 가까운 가게에 가서 가장 신선한 사과를 찾았습니다.",
-  "result": [
-    {
-      "word": "He",
-      "syntax": "주어",
-      "comment": ""
-    },
-    {
-      "word": "went",
-      "syntax": "동사",
-      "comment": "현재 진행형 맥락에서 'goes'대신 'went'를 사용해야 합니다."
-    },
-    {
-      "word": "to",
-      "syntax": "전치사",
-      "comment": ""
-    },
-    {
-      "word": "the",
-      "syntax": "관사",
-      "comment": ""
-    },
-    {
-      "word": "nearest",
-      "syntax": "형용사",
-      "comment": ""
-    },
-    {
-      "word": "store",
-      "syntax": "명사",
-      "comment": ""
-    },
-    {
-      "word": "and",
-      "syntax": "접속사",
-      "comment": ""
-    },
-    {
-      "word": "looked",
-      "syntax": "동사",
-      "comment": "현재 진행형 맥락에서 'look'대신 'looked'를 사용해야 합니다."
-    },
-    {
-      "word": "for",
-      "syntax": "전치사",
-      "comment": ""
-    },
-    {
-      "word": "the",
-      "syntax": "관사",
-      "comment": ""
-    },
-    {
-      "word": "freshest",
-      "syntax": "최상급 형용사",
-      "comment": ""
-    },
-    {
-      "word": "apples",
-      "syntax": "명사",
-      "comment": ""
-    },
-    {
-      "word": "they",
-      "syntax": "대명사",
-      "comment": ""
-    },
-    {
-      "word": "had",
-      "syntax": "동사",
-      "comment": "과거형 맥락에서 현재형 'have' 대신 'had'를 사용해야 합니다."
-    },
-    {
-      "word": ".",
-      "syntax": "문장 부호",
-      "comment": ""
-    }
-  ]
+"kr": "그는 가장 가까운 가게에 가서 가장 신선한 사과를 찾았습니다.",
+"result": [
+{
+"word": "He",
+"syntax": "주어",
+"comment": ""
+},
+{
+"word": "went",
+"syntax": "동사",
+"comment": "현재 진행형 맥락에서 'goes'대신 'went'를 사용해야 합니다."
+},
+{
+"word": "to",
+"syntax": "전치사",
+"comment": ""
+},
+{
+"word": "the",
+"syntax": "관사",
+"comment": ""
+},
+{
+"word": "nearest",
+"syntax": "형용사",
+"comment": ""
+},
+{
+"word": "store",
+"syntax": "명사",
+"comment": ""
+},
+{
+"word": "and",
+"syntax": "접속사",
+"comment": ""
+},
+{
+"word": "looked",
+"syntax": "동사",
+"comment": "현재 진행형 맥락에서 'look'대신 'looked'를 사용해야 합니다."
+},
+{
+"word": "for",
+"syntax": "전치사",
+"comment": ""
+},
+{
+"word": "the",
+"syntax": "관사",
+"comment": ""
+},
+{
+"word": "freshest",
+"syntax": "최상급 형용사",
+"comment": ""
+},
+{
+"word": "apples",
+"syntax": "명사",
+"comment": ""
+},
+{
+"word": "they",
+"syntax": "대명사",
+"comment": ""
+},
+{
+"word": "had",
+"syntax": "동사",
+"comment": "과거형 맥락에서 현재형 'have' 대신 'had'를 사용해야 합니다."
+},
+{
+"word": ".",
+"syntax": "문장 부호",
+"comment": ""
+}
+]
 }
 ```
 ```bash
@@ -245,8 +245,17 @@ curl -X POST "https://bls6x9koja.execute-api.ap-northeast-2.amazonaws.com/defaul
  ┣ 📜README.md
  ┗ 📜pubspec.yaml                    # Flutter 프로젝트 의존성 관리
  ```
+- 이미지 업로드 기능 구현
+    1. [request by image](https://github.com/kimkno/capstone-project/blob/main/client/lib/pages/result_analysis_by_image/result_analysis_by_image_widget.dart) 페이지에서 Gallery picker, google ml kit text recognition 패키지 활용
+       ![Console](docs/4.png)
+    2. Gallery picker 구현
+       ![Console](docs/5.png)
+    3. google ml kit 기반의 _extractText 함수 정의
+       ![Console](docs/6.png)
+
 - OCR (이미지에서 텍스트 추출) 기능 구현
-    - 기능 구현에 Flutter package 활용
-    - https://pub.dev/packages/google_mlkit_text_recognition/install
-    - https://github.com/flutter-ml/google_ml_kit_flutter/tree/master/packages/example
-    - 간단한 ml 기능 생산성 높게 구현 가능
+    1. [/lib/backend/schema](https://github.com/kimkno/capstone-project/blob/main/client/lib/backend/schema/users_record.dart) 하위에 user record 생성
+        - `history` 변수에 학습 문장 기록
+          ![Console](docs/7.png)
+    2. Firebase DB 콘솔에서 array 형태의 history 적재 확인
+       ![Console](docs/8.png)
