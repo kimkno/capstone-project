@@ -68,153 +68,170 @@
 
 
 #### 2) Request, Response (`x-api-key`  필요)
-```bash
-# 1) 구문 분석
-curl -X POST "https://3c4poujwac.execute-api.ap-northeast-2.amazonaws.com/default/capstone-grammar?model=gemini-pro&max_output_tokens=8192" \
--H "Content-Type: application/json" \
--H "x-api-key: {API_KEY}" \
--d '{"prompt": "He goes to the nearest store and look for the freshest apples they had."}'
-```
-```json
-# Sample Response
-{
-"kr": "그는 가장 가까운 가게에 가서 가장 신선한 사과를 찾았습니다.",
-"result": [
-{
-"word": "He",
-"syntax": "주어",
-"comment": ""
-},
-{
-"word": "went",
-"syntax": "동사",
-"comment": "현재 진행형 맥락에서 'goes'대신 'went'를 사용해야 합니다."
-},
-{
-"word": "to",
-"syntax": "전치사",
-"comment": ""
-},
-{
-"word": "the",
-"syntax": "관사",
-"comment": ""
-},
-{
-"word": "nearest",
-"syntax": "형용사",
-"comment": ""
-},
-{
-"word": "store",
-"syntax": "명사",
-"comment": ""
-},
-{
-"word": "and",
-"syntax": "접속사",
-"comment": ""
-},
-{
-"word": "looked",
-"syntax": "동사",
-"comment": "현재 진행형 맥락에서 'look'대신 'looked'를 사용해야 합니다."
-},
-{
-"word": "for",
-"syntax": "전치사",
-"comment": ""
-},
-{
-"word": "the",
-"syntax": "관사",
-"comment": ""
-},
-{
-"word": "freshest",
-"syntax": "최상급 형용사",
-"comment": ""
-},
-{
-"word": "apples",
-"syntax": "명사",
-"comment": ""
-},
-{
-"word": "they",
-"syntax": "대명사",
-"comment": ""
-},
-{
-"word": "had",
-"syntax": "동사",
-"comment": "과거형 맥락에서 현재형 'have' 대신 'had'를 사용해야 합니다."
-},
-{
-"word": ".",
-"syntax": "문장 부호",
-"comment": ""
-}
-]
-}
-```
-```bash
-# 2) 학습 문장 추천
-curl -X POST "https://bls6x9koja.execute-api.ap-northeast-2.amazonaws.com/default/capstone-recommend?model=gemini-pro&max_output_tokens=8192" \
--H "Content-Type: application/json" \
--H "x-api-key: {API_KEY}" \
-```
-```
-# Sample Response
-{
-  "status": "success",
-  "message": "Sentences generated successfully",
-  "data": {
-    "sentences": [
-      {
-        "en": "The boy is playing with a ball.",
-        "kr": "그 소년은 공으로 놀고 있다."
-      },
-      {
-        "en": "My sister went to the store yesterday.",
-        "kr": "언니는 어제 가게에 갔다."
-      },
-      {
-        "en": "Have you ever been to Korea?",
-        "kr": "한국에 가본 적 있어?"
-      },
-      {
-        "en": "I am going to study English tomorrow.",
-        "kr": "나는 내일 영어를 공부하려고 한다."
-      },
-      {
-        "en": "She will be back in two hours.",
-        "kr": "그녀는 2시간 후에 돌아올 것이다."
-      },
-      {
-        "en": "The students are eating lunch in the cafeteria.",
-        "kr": "학생들은 식당에서 점심을 먹고 있다."
-      },
-      {
-        "en": "We have lived in this city for five years.",
-        "kr": "우리는 이 도시에 5년 동안 살았다."
-      },
-      {
-        "en": "Would you like to join us for dinner?",
-        "kr": "함께 저녁 먹을래?"
-      },
-      {
-        "en": "If you study hard, you will pass the exam.",
-        "kr": "열심히 공부하면 시험에 합격할 거야."
-      },
-      {
-        "en": "I wish I had more time to travel.",
-        "kr": "더 여행할 시간이 있기를 바란다."
-      }
+- Gemini API
+    1. [문장 분석](https://github.com/kimkno/capstone-project/blob/main/backend/lambda_function.py)
+    2. [문장 추천](https://github.com/kimkno/capstone-project/blob/main/backend/gen_lambda_function.py)
+    ```bash 
+    # 0) 둘 다 유사하게 request body 에서 사용자 검색 기록 or 문장 input 으로 받아 추천
+    body = json.loads(event.get('body', '{}'))
+    histories = body.get('history')
+
+    query_params = event.get('queryStringParameters', {})
+    model = query_params.get('model', 'gemini-pro')
+    max_output_tokens = int(query_params.get('max_output_tokens', 8192))
+    if model not in ['gemini-pro']:
+        return {
+            'statusCode': 400,
+            'body': json.dumps({'error': f"Invalid model type: {model}"})
+        }
+    ```
+    ```bash
+    # 1) 구문 분석
+    curl -X POST "https://3c4poujwac.execute-api.ap-northeast-2.amazonaws.com/default/capstone-grammar?model=gemini-pro&max_output_tokens=8192" \
+    -H "Content-Type: application/json" \
+    -H "x-api-key: {API_KEY}" \
+    -d '{"prompt": "He goes to the nearest store and look for the freshest apples they had."}'
+    ```
+    ```json
+    # Sample Response
+    {
+    "kr": "그는 가장 가까운 가게에 가서 가장 신선한 사과를 찾았습니다.",
+    "result": [
+    {
+    "word": "He",
+    "syntax": "주어",
+    "comment": ""
+    },
+    {
+    "word": "went",
+    "syntax": "동사",
+    "comment": "현재 진행형 맥락에서 'goes'대신 'went'를 사용해야 합니다."
+    },
+    {
+    "word": "to",
+    "syntax": "전치사",
+    "comment": ""
+    },
+    {
+    "word": "the",
+    "syntax": "관사",
+    "comment": ""
+    },
+    {
+    "word": "nearest",
+    "syntax": "형용사",
+    "comment": ""
+    },
+    {
+    "word": "store",
+    "syntax": "명사",
+    "comment": ""
+    },
+    {
+    "word": "and",
+    "syntax": "접속사",
+    "comment": ""
+    },
+    {
+    "word": "looked",
+    "syntax": "동사",
+    "comment": "현재 진행형 맥락에서 'look'대신 'looked'를 사용해야 합니다."
+    },
+    {
+    "word": "for",
+    "syntax": "전치사",
+    "comment": ""
+    },
+    {
+    "word": "the",
+    "syntax": "관사",
+    "comment": ""
+    },
+    {
+    "word": "freshest",
+    "syntax": "최상급 형용사",
+    "comment": ""
+    },
+    {
+    "word": "apples",
+    "syntax": "명사",
+    "comment": ""
+    },
+    {
+    "word": "they",
+    "syntax": "대명사",
+    "comment": ""
+    },
+    {
+    "word": "had",
+    "syntax": "동사",
+    "comment": "과거형 맥락에서 현재형 'have' 대신 'had'를 사용해야 합니다."
+    },
+    {
+    "word": ".",
+    "syntax": "문장 부호",
+    "comment": ""
+    }
     ]
-  }
-}
-```
+    }
+    ```
+    ```bash
+    # 2) 학습 문장 추천
+    curl -X POST "https://bls6x9koja.execute-api.ap-northeast-2.amazonaws.com/default/capstone-recommend?model=gemini-pro&max_output_tokens=8192" \
+    -H "Content-Type: application/json" \
+    -H "x-api-key: {API_KEY}" \
+    ```
+    ```
+    # Sample Response
+    {
+      "status": "success",
+      "message": "Sentences generated successfully",
+      "data": {
+        "sentences": [
+          {
+            "en": "The boy is playing with a ball.",
+            "kr": "그 소년은 공으로 놀고 있다."
+          },
+          {
+            "en": "My sister went to the store yesterday.",
+            "kr": "언니는 어제 가게에 갔다."
+          },
+          {
+            "en": "Have you ever been to Korea?",
+            "kr": "한국에 가본 적 있어?"
+          },
+          {
+            "en": "I am going to study English tomorrow.",
+            "kr": "나는 내일 영어를 공부하려고 한다."
+          },
+          {
+            "en": "She will be back in two hours.",
+            "kr": "그녀는 2시간 후에 돌아올 것이다."
+          },
+          {
+            "en": "The students are eating lunch in the cafeteria.",
+            "kr": "학생들은 식당에서 점심을 먹고 있다."
+          },
+          {
+            "en": "We have lived in this city for five years.",
+            "kr": "우리는 이 도시에 5년 동안 살았다."
+          },
+          {
+            "en": "Would you like to join us for dinner?",
+            "kr": "함께 저녁 먹을래?"
+          },
+          {
+            "en": "If you study hard, you will pass the exam.",
+            "kr": "열심히 공부하면 시험에 합격할 거야."
+          },
+          {
+            "en": "I wish I had more time to travel.",
+            "kr": "더 여행할 시간이 있기를 바란다."
+          }
+        ]
+      }
+    }
+    ```
 
 ## 2. Client
 ##### 폴더 구조
