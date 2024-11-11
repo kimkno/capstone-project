@@ -6,8 +6,8 @@ import 'auth/firebase_auth/firebase_user_provider.dart';
 import 'auth/firebase_auth/auth_util.dart';
 
 import 'backend/firebase/firebase_config.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import 'flutter_flow/flutter_flow_util.dart';
+import '/page_ui/flutter_ui_theme.dart';
+import 'page_ui/flutter_ui_util.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

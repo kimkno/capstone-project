@@ -1,6 +1,6 @@
-import '/flutter_flow/flutter_flow_icon_button.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
+import '/page_ui/flutter_ui_icon_button.dart';
+import '/page_ui/flutter_ui_theme.dart';
+import '/page_ui/flutter_ui_util.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'result_analysis_by_image_model.dart';

@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '/backend/schema/util/firestore_util.dart';
 
-import '/flutter_flow/flutter_flow_util.dart';
+import '/page_ui/flutter_ui_util.dart';
 
 class ComponentStruct extends FFFirebaseStruct {
   ComponentStruct({

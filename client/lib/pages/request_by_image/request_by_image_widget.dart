@@ -1,13 +1,15 @@
 import '/backend/api_requests/api_calls.dart';
-import '/flutter_flow/flutter_flow_animations.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
+import '/page_ui/flutter_ui_animations.dart';
+import '/page_ui/flutter_ui_theme.dart';
+import '/page_ui/flutter_ui_util.dart';
+import '/page_ui/flutter_ui_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'request_by_image_model.dart';
 export 'request_by_image_model.dart';
+import 'package:gallery_picker/gallery_picker.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 class RequestByImageWidget extends StatefulWidget {
   const RequestByImageWidget({
@@ -25,6 +27,7 @@ class RequestByImageWidget extends StatefulWidget {
 
 class _RequestByImageWidgetState extends State<RequestByImageWidget>
     with TickerProviderStateMixin {
+  File? selectedMedia;
   late RequestByImageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -115,15 +118,46 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
           title: Text(
             'capstone.ai',
             style: FlutterFlowTheme.of(context).headlineMedium.override(
-                  fontFamily: 'Ubuntu',
-                  color: Colors.white,
-                  fontSize: 22.0,
-                  letterSpacing: 0.0,
-                ),
+              fontFamily: 'Ubuntu',
+              color: Colors.white,
+              fontSize: 22.0,
+              letterSpacing: 0.0,
+            ),
           ),
           actions: const [],
           centerTitle: false,
           elevation: 2.0,
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            print('<< Attempting to pick media...');
+            List<MediaFile>? media = await GalleryPicker.pickMedia(
+                context: context,
+                singleMedia: true
+            );
+            if (media != null && media.isNotEmpty) {
+              print('<< Media selected: ${media.length} file(s)');
+              var data = await media.first.getFile();
+              print('<< File path: ${data.path}');
+              setState(() {
+                selectedMedia = data;
+              });
+              if (selectedMedia != null) {
+                print('<< Selected media file: ${selectedMedia?.path}');
+                print('<< Selected media file size: ${selectedMedia?.lengthSync()} bytes');
+                String extractedText = await _extractText(selectedMedia!);
+                print('<< Extracted text: $extractedText');
+                setState(() {
+                  _model.targetTextController.text = extractedText;
+                });
+              }
+            } else {
+              print('<< No media selected');
+            }
+          },
+          child: const Icon(
+            Icons.add,
+          ),
         ),
         body: SafeArea(
           top: true,
@@ -133,7 +167,7 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                 alignment: const AlignmentDirectional(0.0, -0.86),
                 child: Padding(
                   padding:
-                      const EdgeInsetsDirectional.fromSTEB(32.0, 12.0, 32.0, 32.0),
+                  const EdgeInsetsDirectional.fromSTEB(32.0, 12.0, 32.0, 32.0),
                   child: Container(
                     width: double.infinity,
                     height: 150.0,
@@ -143,17 +177,17 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                     alignment: const AlignmentDirectional(0.0, 0.0),
                     child: Padding(
                       padding:
-                          const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 3.0),
+                      const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 3.0),
                       child: Text(
                         '구문 분석',
                         style:
-                            FlutterFlowTheme.of(context).displaySmall.override(
-                                  fontFamily: 'Ubuntu',
-                                  color: const Color(0xFF101213),
-                                  fontSize: 36.0,
-                                  letterSpacing: 0.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                        FlutterFlowTheme.of(context).displaySmall.override(
+                          fontFamily: 'Ubuntu',
+                          color: const Color(0xFF101213),
+                          fontSize: 36.0,
+                          letterSpacing: 0.0,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
@@ -208,27 +242,27 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                         labelColor: const Color(0xFF101213),
                                         unselectedLabelColor: const Color(0xFF57636C),
                                         labelPadding:
-                                            const EdgeInsetsDirectional.fromSTEB(
-                                                32.0, 0.0, 32.0, 0.0),
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            32.0, 0.0, 32.0, 0.0),
                                         labelStyle: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .override(
-                                              fontFamily: 'Plus Jakarta Sans',
-                                              color: Colors.white,
-                                              fontSize: 18.0,
-                                              letterSpacing: 0.0,
-                                              fontWeight: FontWeight.w500,
-                                            ),
+                                          fontFamily: 'Plus Jakarta Sans',
+                                          color: Colors.white,
+                                          fontSize: 18.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                         unselectedLabelStyle:
-                                            FlutterFlowTheme.of(context)
-                                                .titleMedium
-                                                .override(
-                                                  fontFamily: 'Ubuntu',
-                                                  color: Colors.white,
-                                                  fontSize: 18.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
+                                        FlutterFlowTheme.of(context)
+                                            .titleMedium
+                                            .override(
+                                          fontFamily: 'Ubuntu',
+                                          color: Colors.white,
+                                          fontSize: 18.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                         indicatorColor: const Color(0xFF4B39EF),
                                         indicatorWeight: 3.0,
                                         tabs: const [
@@ -248,17 +282,17 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                         children: [
                                           Align(
                                             alignment:
-                                                const AlignmentDirectional(0.0, -1.0),
+                                            const AlignmentDirectional(0.0, -1.0),
                                             child: Padding(
                                               padding: const EdgeInsetsDirectional
                                                   .fromSTEB(
-                                                      24.0, 16.0, 24.0, 0.0),
+                                                  24.0, 16.0, 24.0, 0.0),
                                               child: SingleChildScrollView(
                                                 child: Column(
                                                   mainAxisSize:
-                                                      MainAxisSize.max,
+                                                  MainAxisSize.max,
                                                   crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.start,
                                                   children: [
                                                     if (responsiveVisibility(
                                                       context: context,
@@ -269,54 +303,54 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                         width: 230.0,
                                                         height: 40.0,
                                                         decoration:
-                                                            const BoxDecoration(
+                                                        const BoxDecoration(
                                                           color: Colors.white,
                                                         ),
                                                       ),
                                                     Padding(
                                                       padding:
-                                                          const EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0.0,
-                                                                  4.0,
-                                                                  0.0,
-                                                                  24.0),
+                                                      const EdgeInsetsDirectional
+                                                          .fromSTEB(
+                                                          0.0,
+                                                          4.0,
+                                                          0.0,
+                                                          24.0),
                                                       child: Text(
                                                         '우측 하단 버튼을 클릭해 분석 이미지를 업로드 하세요.',
                                                         textAlign:
-                                                            TextAlign.start,
+                                                        TextAlign.start,
                                                         style: FlutterFlowTheme
-                                                                .of(context)
+                                                            .of(context)
                                                             .labelMedium
                                                             .override(
-                                                              fontFamily:
-                                                                  'Ubuntu',
-                                                              color: const Color(
-                                                                  0xFF57636C),
-                                                              fontSize: 14.0,
-                                                              letterSpacing:
-                                                                  0.0,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                            ),
+                                                          fontFamily:
+                                                          'Ubuntu',
+                                                          color: const Color(
+                                                              0xFF57636C),
+                                                          fontSize: 14.0,
+                                                          letterSpacing:
+                                                          0.0,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w500,
+                                                        ),
                                                       ),
                                                     ),
                                                     Align(
                                                       alignment:
-                                                          const AlignmentDirectional(
-                                                              0.0, 0.0),
+                                                      const AlignmentDirectional(
+                                                          0.0, 0.0),
                                                       child: Padding(
                                                         padding:
-                                                            const EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0,
-                                                                    16.0),
+                                                        const EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            16.0),
                                                         child: SizedBox(
                                                           width:
-                                                              double.infinity,
+                                                          double.infinity,
                                                           child: TextFormField(
                                                             controller: _model
                                                                 .targetTextController,
@@ -325,80 +359,80 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                             autofocus: true,
                                                             obscureText: false,
                                                             decoration:
-                                                                InputDecoration(
+                                                            InputDecoration(
                                                               labelText:
-                                                                  'enter here',
+                                                              'enter here',
                                                               labelStyle:
-                                                                  FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyMedium
-                                                                      .override(
-                                                                        fontFamily:
-                                                                            'Readex Pro',
-                                                                        color: const Color(
-                                                                            0xFF57636C),
-                                                                        letterSpacing:
-                                                                            0.0,
-                                                                      ),
+                                                              FlutterFlowTheme.of(
+                                                                  context)
+                                                                  .bodyMedium
+                                                                  .override(
+                                                                fontFamily:
+                                                                'Readex Pro',
+                                                                color: const Color(
+                                                                    0xFF57636C),
+                                                                letterSpacing:
+                                                                0.0,
+                                                              ),
                                                               enabledBorder:
-                                                                  OutlineInputBorder(
+                                                              OutlineInputBorder(
                                                                 borderSide:
-                                                                    const BorderSide(
+                                                                const BorderSide(
                                                                   color: Color(
                                                                       0xFFE0E3E7),
                                                                   width: 2.0,
                                                                 ),
                                                                 borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            8.0),
+                                                                BorderRadius
+                                                                    .circular(
+                                                                    8.0),
                                                               ),
                                                               focusedBorder:
-                                                                  OutlineInputBorder(
+                                                              OutlineInputBorder(
                                                                 borderSide:
-                                                                    const BorderSide(
+                                                                const BorderSide(
                                                                   color: Color(
                                                                       0xFF4B39EF),
                                                                   width: 2.0,
                                                                 ),
                                                                 borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            8.0),
+                                                                BorderRadius
+                                                                    .circular(
+                                                                    8.0),
                                                               ),
                                                               errorBorder:
-                                                                  OutlineInputBorder(
+                                                              OutlineInputBorder(
                                                                 borderSide:
-                                                                    const BorderSide(
+                                                                const BorderSide(
                                                                   color: Color(
                                                                       0xFFFF5963),
                                                                   width: 2.0,
                                                                 ),
                                                                 borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            8.0),
+                                                                BorderRadius
+                                                                    .circular(
+                                                                    8.0),
                                                               ),
                                                               focusedErrorBorder:
-                                                                  OutlineInputBorder(
+                                                              OutlineInputBorder(
                                                                 borderSide:
-                                                                    const BorderSide(
+                                                                const BorderSide(
                                                                   color: Color(
                                                                       0xFFFF5963),
                                                                   width: 2.0,
                                                                 ),
                                                                 borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            8.0),
+                                                                BorderRadius
+                                                                    .circular(
+                                                                    8.0),
                                                               ),
                                                               filled: true,
                                                               fillColor:
-                                                                  Colors.white,
+                                                              Colors.white,
                                                               contentPadding:
-                                                                  const EdgeInsets
-                                                                      .all(
-                                                                          12.0),
+                                                              const EdgeInsets
+                                                                  .all(
+                                                                  12.0),
                                                             ),
                                                             style: GoogleFonts
                                                                 .getFont(
@@ -406,8 +440,8 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                               color: const Color(
                                                                   0xFF57636C),
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .normal,
+                                                              FontWeight
+                                                                  .normal,
                                                               fontSize: 14.0,
                                                             ),
                                                             textAlign: TextAlign
@@ -415,79 +449,80 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                             maxLines: 16,
                                                             minLines: 6,
                                                             keyboardType:
-                                                                TextInputType
-                                                                    .emailAddress,
+                                                            TextInputType
+                                                                .emailAddress,
                                                             validator: _model
                                                                 .targetTextControllerValidator
                                                                 .asValidator(
-                                                                    context),
+                                                                context),
                                                           ),
                                                         ),
                                                       ),
                                                     ),
                                                     Align(
                                                       alignment:
-                                                          const AlignmentDirectional(
-                                                              0.0, 0.0),
+                                                      const AlignmentDirectional(
+                                                          0.0, 0.0),
                                                       child: Container(
                                                         width: 328.0,
                                                         height: 100.0,
                                                         decoration:
-                                                            BoxDecoration(
+                                                        BoxDecoration(
                                                           color: FlutterFlowTheme
-                                                                  .of(context)
+                                                              .of(context)
                                                               .secondaryBackground,
                                                         ),
                                                         child: Container(
                                                           width: 100.0,
                                                           height: 100.0,
                                                           decoration:
-                                                              BoxDecoration(
+                                                          BoxDecoration(
                                                             color: FlutterFlowTheme
-                                                                    .of(context)
+                                                                .of(context)
                                                                 .secondaryBackground,
                                                           ),
                                                           child: Align(
                                                             alignment:
-                                                                const AlignmentDirectional(
-                                                                    0.0, 0.0),
+                                                            const AlignmentDirectional(
+                                                                0.0, 0.0),
                                                             child: Padding(
                                                               padding:
-                                                                  const EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          0.0,
-                                                                          0.0,
-                                                                          5.0,
-                                                                          16.0),
+                                                              const EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                  0.0,
+                                                                  0.0,
+                                                                  5.0,
+                                                                  16.0),
                                                               child:
-                                                                  FFButtonWidget(
+                                                              FFButtonWidget(
                                                                 onPressed:
                                                                     () async {
+                                                                  // Call JellyGrammar
                                                                   _model.analysisResult =
-                                                                      await AnalysisCall
-                                                                          .call(
+                                                                  await AnalysisCall
+                                                                      .call(
                                                                     prompt: _model
                                                                         .targetTextController
                                                                         .text,
                                                                   );
 
                                                                   if ((_model
-                                                                          .analysisResult
-                                                                          ?.succeeded ??
+                                                                      .analysisResult
+                                                                      ?.succeeded ??
                                                                       true)) {
                                                                     if (getJsonField(
-                                                                          (_model.analysisResult?.jsonBody ??
-                                                                              ''),
-                                                                          r'''$.result''',
-                                                                        ) !=
+                                                                      (_model.analysisResult?.jsonBody ??
+                                                                          ''),
+                                                                      r'''$.result''',
+                                                                    ) !=
                                                                         null) {
                                                                       context
                                                                           .pushNamed(
-                                                                        'ResultAnalysisByImage',
+                                                                        'ResultAnalysisByText',
                                                                         queryParameters:
-                                                                            {
+                                                                        {
                                                                           'result':
-                                                                              serializeParam(
+                                                                          serializeParam(
                                                                             getJsonField(
                                                                               (_model.analysisResult?.jsonBody ?? ''),
                                                                               r'''$.result.*''',
@@ -495,7 +530,7 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                                             ParamType.JSON,
                                                                           ),
                                                                           'inKr':
-                                                                              serializeParam(
+                                                                          serializeParam(
                                                                             getJsonField(
                                                                               (_model.analysisResult?.jsonBody ?? ''),
                                                                               r'''$.kr''',
@@ -509,9 +544,9 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                                           .pushNamed(
                                                                         'RequestSplash',
                                                                         queryParameters:
-                                                                            {
+                                                                        {
                                                                           'targetSentence':
-                                                                              serializeParam(
+                                                                          serializeParam(
                                                                             '유효하지 않은 문장입니다!',
                                                                             ParamType.String,
                                                                           ),
@@ -523,9 +558,9 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                                         .pushNamed(
                                                                       'RequestSplash',
                                                                       queryParameters:
-                                                                          {
+                                                                      {
                                                                         'targetSentence':
-                                                                            serializeParam(
+                                                                        serializeParam(
                                                                           '네트워크 오류로 분석이 실패했습니다!',
                                                                           ParamType
                                                                               .String,
@@ -535,54 +570,54 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                                   }
 
                                                                   safeSetState(
-                                                                      () {});
+                                                                          () {});
                                                                 },
                                                                 text: '분석 시작',
                                                                 options:
-                                                                    FFButtonOptions(
+                                                                FFButtonOptions(
                                                                   width: 300.0,
                                                                   height: 52.0,
                                                                   padding: const EdgeInsetsDirectional
                                                                       .fromSTEB(
-                                                                          0.0,
-                                                                          0.0,
-                                                                          0.0,
-                                                                          0.0),
+                                                                      0.0,
+                                                                      0.0,
+                                                                      0.0,
+                                                                      0.0),
                                                                   iconPadding: const EdgeInsetsDirectional
                                                                       .fromSTEB(
-                                                                          0.0,
-                                                                          0.0,
-                                                                          0.0,
-                                                                          0.0),
+                                                                      0.0,
+                                                                      0.0,
+                                                                      0.0,
+                                                                      0.0),
                                                                   color: const Color(
                                                                       0xFF4B39EF),
                                                                   textStyle: FlutterFlowTheme.of(
-                                                                          context)
+                                                                      context)
                                                                       .titleSmall
                                                                       .override(
-                                                                        fontFamily:
-                                                                            'Plus Jakarta Sans',
-                                                                        color: Colors
-                                                                            .white,
-                                                                        fontSize:
-                                                                            16.0,
-                                                                        letterSpacing:
-                                                                            0.0,
-                                                                        fontWeight:
-                                                                            FontWeight.w500,
-                                                                      ),
+                                                                    fontFamily:
+                                                                    'Plus Jakarta Sans',
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                    16.0,
+                                                                    letterSpacing:
+                                                                    0.0,
+                                                                    fontWeight:
+                                                                    FontWeight.w500,
+                                                                  ),
                                                                   elevation:
-                                                                      3.0,
+                                                                  3.0,
                                                                   borderSide:
-                                                                      const BorderSide(
+                                                                  const BorderSide(
                                                                     color: Colors
                                                                         .transparent,
                                                                     width: 1.0,
                                                                   ),
                                                                   borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10.0),
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                      10.0),
                                                                 ),
                                                               ),
                                                             ),
@@ -592,70 +627,70 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                     ),
                                                     Align(
                                                       alignment:
-                                                          const AlignmentDirectional(
-                                                              0.0, 0.0),
+                                                      const AlignmentDirectional(
+                                                          0.0, 0.0),
                                                       child: Container(
                                                         width: 328.0,
                                                         height: 100.0,
                                                         decoration:
-                                                            BoxDecoration(
+                                                        BoxDecoration(
                                                           color: FlutterFlowTheme
-                                                                  .of(context)
+                                                              .of(context)
                                                               .secondaryBackground,
                                                         ),
                                                         child: Container(
                                                           width: 100.0,
                                                           height: 100.0,
                                                           decoration:
-                                                              BoxDecoration(
+                                                          BoxDecoration(
                                                             color: FlutterFlowTheme
-                                                                    .of(context)
+                                                                .of(context)
                                                                 .secondaryBackground,
                                                           ),
                                                           child: Align(
                                                             alignment:
-                                                                const AlignmentDirectional(
-                                                                    0.0, 0.0),
+                                                            const AlignmentDirectional(
+                                                                0.0, 0.0),
                                                             child: Row(
                                                               mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .min,
+                                                              MainAxisSize
+                                                                  .min,
                                                               children: [
                                                                 Align(
                                                                   alignment:
-                                                                      const AlignmentDirectional(
-                                                                          0.0,
-                                                                          0.0),
+                                                                  const AlignmentDirectional(
+                                                                      0.0,
+                                                                      0.0),
                                                                   child:
-                                                                      Padding(
+                                                                  Padding(
                                                                     padding: const EdgeInsetsDirectional
                                                                         .fromSTEB(
-                                                                            0.0,
-                                                                            0.0,
-                                                                            5.0,
-                                                                            16.0),
+                                                                        0.0,
+                                                                        0.0,
+                                                                        5.0,
+                                                                        16.0),
                                                                     child:
-                                                                        FFButtonWidget(
+                                                                    FFButtonWidget(
                                                                       onPressed:
                                                                           () async {
                                                                         context.pushNamed(
                                                                             'RequestByText');
                                                                       },
                                                                       text:
-                                                                          '텍스트 전환',
+                                                                      '텍스트 전환',
                                                                       icon:
-                                                                          const Icon(
+                                                                      const Icon(
                                                                         Icons
                                                                             .text_fields,
                                                                         size:
-                                                                            15.0,
+                                                                        15.0,
                                                                       ),
                                                                       options:
-                                                                          FFButtonOptions(
+                                                                      FFButtonOptions(
                                                                         width:
-                                                                            148.0,
+                                                                        148.0,
                                                                         height:
-                                                                            52.0,
+                                                                        52.0,
                                                                         padding: const EdgeInsetsDirectional.fromSTEB(
                                                                             0.0,
                                                                             0.0,
@@ -671,46 +706,46 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                                         textStyle: FlutterFlowTheme.of(context)
                                                                             .titleSmall
                                                                             .override(
-                                                                              fontFamily: 'Plus Jakarta Sans',
-                                                                              color: Colors.white,
-                                                                              fontSize: 16.0,
-                                                                              letterSpacing: 0.0,
-                                                                              fontWeight: FontWeight.w500,
-                                                                            ),
+                                                                          fontFamily: 'Plus Jakarta Sans',
+                                                                          color: Colors.white,
+                                                                          fontSize: 16.0,
+                                                                          letterSpacing: 0.0,
+                                                                          fontWeight: FontWeight.w500,
+                                                                        ),
                                                                         elevation:
-                                                                            3.0,
+                                                                        3.0,
                                                                         borderSide:
-                                                                            const BorderSide(
+                                                                        const BorderSide(
                                                                           color:
-                                                                              Colors.transparent,
+                                                                          Colors.transparent,
                                                                           width:
-                                                                              1.0,
+                                                                          1.0,
                                                                         ),
                                                                         borderRadius:
-                                                                            BorderRadius.circular(10.0),
+                                                                        BorderRadius.circular(10.0),
                                                                       ),
                                                                     ),
                                                                   ),
                                                                 ),
                                                                 Align(
                                                                   alignment:
-                                                                      const AlignmentDirectional(
-                                                                          1.0,
-                                                                          0.0),
+                                                                  const AlignmentDirectional(
+                                                                      1.0,
+                                                                      0.0),
                                                                   child:
-                                                                      Padding(
+                                                                  Padding(
                                                                     padding: const EdgeInsetsDirectional
                                                                         .fromSTEB(
-                                                                            5.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            16.0),
+                                                                        5.0,
+                                                                        0.0,
+                                                                        0.0,
+                                                                        16.0),
                                                                     child:
-                                                                        FFButtonWidget(
+                                                                    FFButtonWidget(
                                                                       onPressed:
                                                                           () async {
                                                                         _model.recommendResults =
-                                                                            await RecommendCall.call();
+                                                                        await RecommendCall.call();
 
                                                                         if ((_model.recommendResults?.succeeded ??
                                                                             true)) {
@@ -718,7 +753,7 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                                               .pushNamed(
                                                                             'RecommendAnalysisByImage',
                                                                             queryParameters:
-                                                                                {
+                                                                            {
                                                                               'syntax': serializeParam(
                                                                                 getJsonField(
                                                                                   (_model.recommendResults?.jsonBody ?? ''),
@@ -740,7 +775,7 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                                         } else {
                                                                           await showDialog(
                                                                             context:
-                                                                                context,
+                                                                            context,
                                                                             builder:
                                                                                 (alertDialogContext) {
                                                                               return AlertDialog(
@@ -758,23 +793,23 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                                         }
 
                                                                         safeSetState(
-                                                                            () {});
+                                                                                () {});
                                                                       },
                                                                       text:
-                                                                          '추천',
+                                                                      '추천',
                                                                       icon:
-                                                                          const Icon(
+                                                                      const Icon(
                                                                         Icons
                                                                             .rocket,
                                                                         size:
-                                                                            15.0,
+                                                                        15.0,
                                                                       ),
                                                                       options:
-                                                                          FFButtonOptions(
+                                                                      FFButtonOptions(
                                                                         width:
-                                                                            148.0,
+                                                                        148.0,
                                                                         height:
-                                                                            52.0,
+                                                                        52.0,
                                                                         padding: const EdgeInsetsDirectional.fromSTEB(
                                                                             0.0,
                                                                             0.0,
@@ -790,23 +825,23 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                                         textStyle: FlutterFlowTheme.of(context)
                                                                             .titleSmall
                                                                             .override(
-                                                                              fontFamily: 'Plus Jakarta Sans',
-                                                                              color: Colors.white,
-                                                                              fontSize: 16.0,
-                                                                              letterSpacing: 0.0,
-                                                                              fontWeight: FontWeight.w500,
-                                                                            ),
+                                                                          fontFamily: 'Plus Jakarta Sans',
+                                                                          color: Colors.white,
+                                                                          fontSize: 16.0,
+                                                                          letterSpacing: 0.0,
+                                                                          fontWeight: FontWeight.w500,
+                                                                        ),
                                                                         elevation:
-                                                                            3.0,
+                                                                        3.0,
                                                                         borderSide:
-                                                                            const BorderSide(
+                                                                        const BorderSide(
                                                                           color:
-                                                                              Colors.transparent,
+                                                                          Colors.transparent,
                                                                           width:
-                                                                              1.0,
+                                                                          1.0,
                                                                         ),
                                                                         borderRadius:
-                                                                            BorderRadius.circular(10.0),
+                                                                        BorderRadius.circular(10.0),
                                                                       ),
                                                                     ),
                                                                   ),
@@ -819,70 +854,70 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                     ),
                                                     Align(
                                                       alignment:
-                                                          const AlignmentDirectional(
-                                                              0.0, 0.0),
+                                                      const AlignmentDirectional(
+                                                          0.0, 0.0),
                                                       child: Container(
                                                         width: 328.0,
                                                         height: 100.0,
                                                         decoration:
-                                                            BoxDecoration(
+                                                        BoxDecoration(
                                                           color: FlutterFlowTheme
-                                                                  .of(context)
+                                                              .of(context)
                                                               .secondaryBackground,
                                                         ),
                                                         child: Container(
                                                           width: 100.0,
                                                           height: 100.0,
                                                           decoration:
-                                                              BoxDecoration(
+                                                          BoxDecoration(
                                                             color: FlutterFlowTheme
-                                                                    .of(context)
+                                                                .of(context)
                                                                 .secondaryBackground,
                                                           ),
                                                           child: Align(
                                                             alignment:
-                                                                const AlignmentDirectional(
-                                                                    0.0, 0.0),
+                                                            const AlignmentDirectional(
+                                                                0.0, 0.0),
                                                             child: Row(
                                                               mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .min,
+                                                              MainAxisSize
+                                                                  .min,
                                                               children: [
                                                                 Align(
                                                                   alignment:
-                                                                      const AlignmentDirectional(
-                                                                          1.0,
-                                                                          0.0),
+                                                                  const AlignmentDirectional(
+                                                                      1.0,
+                                                                      0.0),
                                                                   child:
-                                                                      Padding(
+                                                                  Padding(
                                                                     padding: const EdgeInsetsDirectional
                                                                         .fromSTEB(
-                                                                            5.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            16.0),
+                                                                        5.0,
+                                                                        0.0,
+                                                                        0.0,
+                                                                        16.0),
                                                                     child:
-                                                                        FFButtonWidget(
+                                                                    FFButtonWidget(
                                                                       onPressed:
                                                                           () async {
                                                                         context.pushNamed(
                                                                             'Login');
                                                                       },
                                                                       text:
-                                                                          '로그아웃',
+                                                                      '로그아웃',
                                                                       icon:
-                                                                          const Icon(
+                                                                      const Icon(
                                                                         Icons
                                                                             .key_off,
                                                                         size:
-                                                                            15.0,
+                                                                        15.0,
                                                                       ),
                                                                       options:
-                                                                          FFButtonOptions(
+                                                                      FFButtonOptions(
                                                                         width:
-                                                                            300.0,
+                                                                        300.0,
                                                                         height:
-                                                                            52.0,
+                                                                        52.0,
                                                                         padding: const EdgeInsetsDirectional.fromSTEB(
                                                                             0.0,
                                                                             0.0,
@@ -898,23 +933,23 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                                         textStyle: FlutterFlowTheme.of(context)
                                                                             .titleSmall
                                                                             .override(
-                                                                              fontFamily: 'Plus Jakarta Sans',
-                                                                              color: Colors.white,
-                                                                              fontSize: 16.0,
-                                                                              letterSpacing: 0.0,
-                                                                              fontWeight: FontWeight.w500,
-                                                                            ),
+                                                                          fontFamily: 'Plus Jakarta Sans',
+                                                                          color: Colors.white,
+                                                                          fontSize: 16.0,
+                                                                          letterSpacing: 0.0,
+                                                                          fontWeight: FontWeight.w500,
+                                                                        ),
                                                                         elevation:
-                                                                            3.0,
+                                                                        3.0,
                                                                         borderSide:
-                                                                            const BorderSide(
+                                                                        const BorderSide(
                                                                           color:
-                                                                              Colors.transparent,
+                                                                          Colors.transparent,
                                                                           width:
-                                                                              1.0,
+                                                                          1.0,
                                                                         ),
                                                                         borderRadius:
-                                                                            BorderRadius.circular(10.0),
+                                                                        BorderRadius.circular(10.0),
                                                                       ),
                                                                     ),
                                                                   ),
@@ -928,7 +963,7 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                   ],
                                                 ),
                                               ).animateOnPageLoad(animationsMap[
-                                                  'columnOnPageLoadAnimation']!),
+                                              'columnOnPageLoadAnimation']!),
                                             ),
                                           ),
                                         ],
@@ -951,5 +986,15 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
         ),
       ),
     );
+  }
+
+  Future<String> _extractText(File imageFile) async {
+    print('<< Extracting text from image...');
+    final inputImage = InputImage.fromFile(imageFile);
+    final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+    final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+
+    print('<< Extracted text: ${recognizedText.text}');
+    return recognizedText.text;
   }
 }

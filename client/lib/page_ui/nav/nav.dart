@@ -8,8 +8,8 @@ import '/backend/schema/structs/index.dart';
 import '/auth/base_auth_user_provider.dart';
 
 import '/index.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
-import '/flutter_flow/flutter_flow_util.dart';
+import '/page_ui/flutter_ui_theme.dart';
+import '/page_ui/flutter_ui_util.dart';
 
 export 'package:go_router/go_router.dart';
 export 'serialization_util.dart';
