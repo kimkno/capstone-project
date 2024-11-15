@@ -1,17 +1,19 @@
+import 'dart:io';
 import '/backend/api_requests/api_calls.dart';
 import '/page_ui/page_ui_animations.dart';
 import '/page_ui/page_ui_theme.dart';
 import '/page_ui/page_ui_util.dart';
 import '/page_ui/page_ui_widgets.dart';
-import 'dart:math';
-import 'package:capstone_test/image_processing//widgets/index.dart' as custom_widgets;
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'request_by_image_model.dart';
 export 'request_by_image_model.dart';
+import 'package:gallery_picker/gallery_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+
 
 class RequestByImageWidget extends StatefulWidget {
   const RequestByImageWidget({
@@ -31,6 +33,7 @@ class RequestByImageWidget extends StatefulWidget {
 
 class _RequestByImageWidgetState extends State<RequestByImageWidget>
     with TickerProviderStateMixin {
+  File? selectedMedia;
   late RequestByImageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -131,6 +134,42 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
           centerTitle: false,
           elevation: 2.0,
         ),
+        //
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+          bool hasPermission = await requestGalleryPermission();
+          if (hasPermission) {
+            print('<< Attempting to pick media...');
+            List<MediaFile>? media = await GalleryPicker.pickMedia(
+                context: context,
+                singleMedia: true
+            );
+            if (media != null && media.isNotEmpty) {
+              print('<< Media selected: ${media.length} file(s)');
+              var data = await media.first.getFile();
+              print('<< File path: ${data.path}');
+              setState(() {
+                selectedMedia = data;
+              });
+              if (selectedMedia != null) {
+                print('<< Selected media file: ${selectedMedia?.path}');
+                print('<< Selected media file size: ${selectedMedia?.lengthSync()} bytes');
+                String extractedText = await _extractText(selectedMedia!);
+                print('<< Extracted text: $extractedText');
+                setState(() {
+                  _model.targetTextController.text = extractedText;
+                });
+              }
+            } else {
+              print('<< No media selected');
+            }
+          } else {
+            print("Gallery permission denied");
+          }
+        },
+        child: const Icon(Icons.add,),
+        ),
+        //
         body: SafeArea(
           top: true,
           child: Stack(
@@ -253,12 +292,9 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                         controller: _model.tabBarController,
                                         children: [
                                           Align(
-                                            alignment:
-                                                AlignmentDirectional(0.0, -1.0),
+                                            alignment: AlignmentDirectional(0.0, -1.0),
                                             child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      24.0, 16.0, 24.0, 0.0),
+                                              padding: EdgeInsetsDirectional.fromSTEB(24.0, 16.0, 24.0, 0.0),
                                               child: SingleChildScrollView(
                                                 child: Column(
                                                   mainAxisSize:
@@ -275,182 +311,72 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                         width: 230.0,
                                                         height: 40.0,
                                                         decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.white,
-                                                        ),
+                                                            BoxDecoration(color: Colors.white,),
                                                       ),
-                                                    Container(
-                                                      decoration:
-                                                          BoxDecoration(),
-                                                      child: Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                0.0, 0.0),
-                                                        child: Container(
-                                                          width: 250.0,
-                                                          height: 150.0,
-                                                          child: custom_widgets
-                                                              .ImagePickerView(
-                                                            width: 250.0,
-                                                            height: 150.0,
-                                                            onFilePicked:
-                                                                (picked) async {
-                                                              safeSetState(() {
-                                                                _model.targetTextController
-                                                                        ?.text =
-                                                                    widget!
-                                                                        .isImageOn
-                                                                        .toString();
-                                                                _model
-                                                                    .targetFocusNode
-                                                                    ?.requestFocus();
-                                                                WidgetsBinding
-                                                                    .instance
-                                                                    .addPostFrameCallback(
-                                                                        (_) {
-                                                                  _model.targetTextController
-                                                                          ?.selection =
-                                                                      TextSelection
-                                                                          .collapsed(
-                                                                    offset: _model
-                                                                        .targetTextController!
-                                                                        .text
-                                                                        .length,
-                                                                  );
-                                                                });
-                                                              });
-                                                            },
-                                                            onFileRemoved:
-                                                                (removed) async {},
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
                                                     Align(
                                                       alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: Container(
-                                                        decoration:
-                                                            BoxDecoration(),
-                                                        child:
-                                                            SingleChildScrollView(
-                                                          child: Column(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                            children: [
-                                                              if (widget!
-                                                                      .isImageOn !=
-                                                                  null)
-                                                                Opacity(
-                                                                  opacity: 0.0,
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            16.0),
-                                                                    child:
-                                                                        Container(
-                                                                      width: double
-                                                                          .infinity,
-                                                                      child:
-                                                                          TextFormField(
-                                                                        controller:
-                                                                            _model.targetTextController,
-                                                                        focusNode:
-                                                                            _model.targetFocusNode,
-                                                                        autofocus:
-                                                                            true,
-                                                                        obscureText:
-                                                                            false,
-                                                                        decoration:
-                                                                            InputDecoration(
-                                                                          labelText:
-                                                                              'enter here',
-                                                                          labelStyle: FlutterFlowTheme.of(context)
-                                                                              .bodyMedium
-                                                                              .override(
-                                                                                fontFamily: 'Readex Pro',
-                                                                                color: Color(0xFF57636C),
-                                                                                letterSpacing: 0.0,
-                                                                              ),
-                                                                          enabledBorder:
-                                                                              OutlineInputBorder(
-                                                                            borderSide:
-                                                                                BorderSide(
-                                                                              color: Color(0xFFE0E3E7),
-                                                                              width: 2.0,
-                                                                            ),
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                          ),
-                                                                          focusedBorder:
-                                                                              OutlineInputBorder(
-                                                                            borderSide:
-                                                                                BorderSide(
-                                                                              color: Color(0xFF4B39EF),
-                                                                              width: 2.0,
-                                                                            ),
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                          ),
-                                                                          errorBorder:
-                                                                              OutlineInputBorder(
-                                                                            borderSide:
-                                                                                BorderSide(
-                                                                              color: Color(0xFFFF5963),
-                                                                              width: 2.0,
-                                                                            ),
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                          ),
-                                                                          focusedErrorBorder:
-                                                                              OutlineInputBorder(
-                                                                            borderSide:
-                                                                                BorderSide(
-                                                                              color: Color(0xFFFF5963),
-                                                                              width: 2.0,
-                                                                            ),
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8.0),
-                                                                          ),
-                                                                          filled:
-                                                                              true,
-                                                                          fillColor:
-                                                                              Colors.white,
-                                                                          contentPadding:
-                                                                              EdgeInsets.all(12.0),
-                                                                        ),
-                                                                        style: GoogleFonts
-                                                                            .getFont(
-                                                                          'Plus Jakarta Sans',
-                                                                          color:
-                                                                              Color(0xFF57636C),
-                                                                          fontWeight:
-                                                                              FontWeight.normal,
-                                                                          fontSize:
-                                                                              14.0,
-                                                                        ),
-                                                                        textAlign:
-                                                                            TextAlign.justify,
-                                                                        maxLines:
-                                                                            16,
-                                                                        minLines:
-                                                                            1,
-                                                                        keyboardType:
-                                                                            TextInputType.emailAddress,
-                                                                        validator: _model
-                                                                            .targetTextControllerValidator
-                                                                            .asValidator(context),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                            ],
+                                                      AlignmentDirectional(
+                                                          0.0, 0.0),
+                                                      child: Padding(
+                                                        padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            16.0),
+                                                        child: Container(
+                                                          width: double.infinity,
+                                                          child:
+                                                          TextFormField(
+                                                            controller: _model.targetTextController,
+                                                            focusNode: _model.targetFocusNode,
+                                                            autofocus:
+                                                            true,
+                                                            obscureText:
+                                                            false,
+                                                            decoration:
+                                                            InputDecoration(
+                                                              labelText:
+                                                              'enter here',
+                                                              labelStyle: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                fontFamily: 'Readex Pro',
+                                                                color: Color(0xFF57636C),
+                                                                letterSpacing: 0.0,
+                                                              ),
+                                                              enabledBorder: OutlineInputBorder(
+                                                                borderSide: BorderSide(color: Color(0xFFE0E3E7), width: 2.0,),
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                              ),
+                                                              focusedBorder: OutlineInputBorder(
+                                                                borderSide: BorderSide(color: Color(0xFF4B39EF), width: 2.0,),
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                              ),
+                                                              errorBorder: OutlineInputBorder(
+                                                                borderSide: BorderSide(color: Color(0xFFFF5963), width: 2.0,),
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                              ),
+                                                              focusedErrorBorder: OutlineInputBorder(
+                                                                borderSide: BorderSide(color: Color(0xFFFF5963), width: 2.0,),
+                                                                borderRadius: BorderRadius.circular(8.0),
+                                                              ),
+                                                              filled: true,
+                                                              fillColor: Colors.white,
+                                                              contentPadding: EdgeInsets.all(12.0),),
+                                                            style: GoogleFonts.getFont('Plus Jakarta Sans', color: Color(0xFF57636C), fontWeight: FontWeight.normal, fontSize: 14.0,
+                                                            ),
+                                                            textAlign:
+                                                            TextAlign
+                                                                .justify,
+                                                            maxLines: 16,
+                                                            minLines: 6,
+                                                            keyboardType:
+                                                            TextInputType
+                                                                .emailAddress,
+                                                            validator: _model
+                                                                .targetTextControllerValidator
+                                                                .asValidator(
+                                                                context),
                                                           ),
                                                         ),
                                                       ),
@@ -982,5 +908,45 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
         ),
       ),
     );
+  }
+  Future<String> _extractText(File imageFile) async {
+    print('<< Extracting text from image...');
+    final inputImage = InputImage.fromFile(imageFile);
+    final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+    final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+    print('<< Extracted text: ${recognizedText.text}');
+    return recognizedText.text;
+  }
+
+  Future<bool> requestGalleryPermission() async {
+    final deviceInfo = DeviceInfoPlugin();
+    final androidInfo = await deviceInfo.androidInfo;
+
+    if (androidInfo.version.sdkInt >= 33) {
+      // Android 13 이상
+      PermissionStatus status = await Permission.photos.status;
+      if (status.isGranted) {
+        return true;
+      } else if (status.isDenied) {
+        PermissionStatus newStatus = await Permission.photos.request();
+        return newStatus.isGranted;
+      } else if (status.isPermanentlyDenied) {
+        openAppSettings();
+        return false;
+      }
+    } else {
+      PermissionStatus status = await Permission.storage.status;
+      if (status.isGranted) {
+        return true;
+      } else if (status.isDenied) {
+        PermissionStatus newStatus = await Permission.storage.request();
+        return newStatus.isGranted;
+      } else if (status.isPermanentlyDenied) {
+        openAppSettings();
+        return false;
+      }
+    }
+
+    return false;
   }
 }
