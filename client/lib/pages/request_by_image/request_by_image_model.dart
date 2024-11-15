@@ -1,5 +1,6 @@
 import '/backend/api_requests/api_calls.dart';
-import '/page_ui/flutter_ui_util.dart';
+import '/page_ui/page_ui_util.dart';
+import 'package:capstone_test/image_processing//widgets/index.dart' as img_widgets;
 import 'request_by_image_widget.dart' show RequestByImageWidget;
 import 'package:flutter/material.dart';
 
@@ -11,13 +12,10 @@ class RequestByImageModel extends FlutterFlowModel<RequestByImageWidget> {
   int get tabBarCurrentIndex =>
       tabBarController != null ? tabBarController!.index : 0;
 
-  // State field(s) for target widget.
   FocusNode? targetFocusNode;
   TextEditingController? targetTextController;
   String? Function(BuildContext, String?)? targetTextControllerValidator;
-  // Stores action output result for [Backend Call - API (analysis)] action in Button widget.
   ApiCallResponse? analysisResult;
-  // Stores action output result for [Backend Call - API (recommend)] action in Button widget.
   ApiCallResponse? recommendResults;
 
   @override

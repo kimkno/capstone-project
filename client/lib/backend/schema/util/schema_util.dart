@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:from_css_color/from_css_color.dart';
 
-import '/page_ui/flutter_ui_util.dart';
+import '/page_ui/page_ui_util.dart';
 
 export 'package:collection/collection.dart' show ListEquality;
 export 'package:flutter/material.dart' show Color, Colors;
@@ -57,8 +57,8 @@ List<T>? getStructList<T>(
     value is! List
         ? null
         : value
-            .whereType<Map<String, dynamic>>()
-            .map((e) => structBuilder(e))
+            .where((e) => e is Map<String, dynamic>)
+            .map((e) => structBuilder(e as Map<String, dynamic>))
             .toList();
 
 Color? getSchemaColor(dynamic value) => value is String

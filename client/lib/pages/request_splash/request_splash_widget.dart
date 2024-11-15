@@ -1,8 +1,11 @@
-import '/page_ui/flutter_ui_icon_button.dart';
-import '/page_ui/flutter_ui_theme.dart';
-import '/page_ui/flutter_ui_util.dart';
+import '/page_ui/page_ui_icon_button.dart';
+import '/page_ui/page_ui_theme.dart';
+import '/page_ui/page_ui_util.dart';
+import '/page_ui/page_ui_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'request_splash_model.dart';
 export 'request_splash_model.dart';
 
@@ -51,7 +54,7 @@ class _RequestSplashWidgetState extends State<RequestSplashWidget> {
             borderRadius: 30.0,
             borderWidth: 1.0,
             buttonSize: 20.0,
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back_rounded,
               color: Color(0xFF15161E),
               size: 30.0,
@@ -64,13 +67,13 @@ class _RequestSplashWidgetState extends State<RequestSplashWidget> {
             '구문 분석',
             style: FlutterFlowTheme.of(context).titleLarge.override(
                   fontFamily: 'Outfit',
-                  color: const Color(0xFF15161E),
+                  color: Color(0xFF15161E),
                   fontSize: 22.0,
                   letterSpacing: 0.0,
                   fontWeight: FontWeight.w500,
                 ),
           ),
-          actions: const [],
+          actions: [],
           centerTitle: false,
           elevation: 0.0,
         ),
@@ -79,20 +82,20 @@ class _RequestSplashWidgetState extends State<RequestSplashWidget> {
           child: Stack(
             children: [
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
+                padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(
+                        padding: EdgeInsetsDirectional.fromSTEB(
                             0.0, 100.0, 0.0, 0.0),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Align(
-                              alignment: const AlignmentDirectional(0.0, 0.0),
+                              alignment: AlignmentDirectional(0.0, 0.0),
                               child: Lottie.network(
                                 'https://lottie.host/2b7308ca-75e1-4749-acb1-d0b6dddeff7e/gJRQkO7M2U.json',
                                 width: 120.0,
@@ -103,7 +106,7 @@ class _RequestSplashWidgetState extends State<RequestSplashWidget> {
                             ),
                             Text(
                               valueOrDefault<String>(
-                                widget.targetSentence,
+                                widget!.targetSentence,
                                 'ERROR!',
                               ),
                               textAlign: TextAlign.center,
@@ -128,7 +131,7 @@ class _RequestSplashWidgetState extends State<RequestSplashWidget> {
                               thickness: 1.0,
                               color: FlutterFlowTheme.of(context).accent4,
                             ),
-                          ].divide(const SizedBox(height: 12.0)),
+                          ].divide(SizedBox(height: 12.0)),
                         ),
                       ),
                     ],
