@@ -3,67 +3,59 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 
 import '/backend/schema/util/firestore_util.dart';
+import '/backend/schema/util/schema_util.dart';
 
 import 'index.dart';
-import '/page_ui/flutter_ui_util.dart';
+import '/page_ui/page_ui_util.dart';
 
 class DocumentsRecord extends FirestoreRecord {
   DocumentsRecord._(
-    super.reference,
-    super.data,
-  ) {
+    DocumentReference reference,
+    Map<String, dynamic> data,
+  ) : super(reference, data) {
     _initializeFields();
   }
 
-  // "name" field.
-  String? _name;
-  String get name => _name ?? '';
-  bool hasName() => _name != null;
+  // "email" field.
+  String? _email;
+  String get email => _email ?? '';
+  bool hasEmail() => _email != null;
 
-  // "created_at" field.
-  DateTime? _createdAt;
-  DateTime? get createdAt => _createdAt;
-  bool hasCreatedAt() => _createdAt != null;
+  // "translates" field.
+  List<String>? _translates;
+  List<String> get translates => _translates ?? const [];
+  bool hasTranslates() => _translates != null;
 
-  // "modified_at" field.
-  DateTime? _modifiedAt;
-  DateTime? get modifiedAt => _modifiedAt;
-  bool hasModifiedAt() => _modifiedAt != null;
+  // "histories" field.
+  List<ComponentStruct>? _histories;
+  List<ComponentStruct> get histories => _histories ?? const [];
+  bool hasHistories() => _histories != null;
 
-  // "on_sale" field.
-  bool? _onSale;
-  bool get onSale => _onSale ?? false;
-  bool hasOnSale() => _onSale != null;
+  // "created_time" field.
+  DateTime? _createdTime;
+  DateTime? get createdTime => _createdTime;
+  bool hasCreatedTime() => _createdTime != null;
 
-  // "price" field.
-  double? _price;
-  double get price => _price ?? 0.0;
-  bool hasPrice() => _price != null;
+  // "history" field.
+  List<String>? _history;
+  List<String> get history => _history ?? const [];
+  bool hasHistory() => _history != null;
 
-  // "specifications" field.
-  String? _specifications;
-  String get specifications => _specifications ?? '';
-  bool hasSpecifications() => _specifications != null;
-
-  // "quantity" field.
-  int? _quantity;
-  int get quantity => _quantity ?? 0;
-  bool hasQuantity() => _quantity != null;
-
-  // "sale_price" field.
-  double? _salePrice;
-  double get salePrice => _salePrice ?? 0.0;
-  bool hasSalePrice() => _salePrice != null;
+  // "target" field.
+  String? _target;
+  String get target => _target ?? '';
+  bool hasTarget() => _target != null;
 
   void _initializeFields() {
-    _name = snapshotData['name'] as String?;
-    _createdAt = snapshotData['created_at'] as DateTime?;
-    _modifiedAt = snapshotData['modified_at'] as DateTime?;
-    _onSale = snapshotData['on_sale'] as bool?;
-    _price = castToType<double>(snapshotData['price']);
-    _specifications = snapshotData['specifications'] as String?;
-    _quantity = castToType<int>(snapshotData['quantity']);
-    _salePrice = castToType<double>(snapshotData['sale_price']);
+    _email = snapshotData['email'] as String?;
+    _translates = getDataList(snapshotData['translates']);
+    _histories = getStructList(
+      snapshotData['histories'],
+      ComponentStruct.fromMap,
+    );
+    _createdTime = snapshotData['created_time'] as DateTime?;
+    _history = getDataList(snapshotData['history']);
+    _target = snapshotData['target'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -101,25 +93,15 @@ class DocumentsRecord extends FirestoreRecord {
 }
 
 Map<String, dynamic> createDocumentsRecordData({
-  String? name,
-  DateTime? createdAt,
-  DateTime? modifiedAt,
-  bool? onSale,
-  double? price,
-  String? specifications,
-  int? quantity,
-  double? salePrice,
+  String? email,
+  DateTime? createdTime,
+  String? target,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
-      'name': name,
-      'created_at': createdAt,
-      'modified_at': modifiedAt,
-      'on_sale': onSale,
-      'price': price,
-      'specifications': specifications,
-      'quantity': quantity,
-      'sale_price': salePrice,
+      'email': email,
+      'created_time': createdTime,
+      'target': target,
     }.withoutNulls,
   );
 
@@ -131,26 +113,23 @@ class DocumentsRecordDocumentEquality implements Equality<DocumentsRecord> {
 
   @override
   bool equals(DocumentsRecord? e1, DocumentsRecord? e2) {
-    return e1?.name == e2?.name &&
-        e1?.createdAt == e2?.createdAt &&
-        e1?.modifiedAt == e2?.modifiedAt &&
-        e1?.onSale == e2?.onSale &&
-        e1?.price == e2?.price &&
-        e1?.specifications == e2?.specifications &&
-        e1?.quantity == e2?.quantity &&
-        e1?.salePrice == e2?.salePrice;
+    const listEquality = ListEquality();
+    return e1?.email == e2?.email &&
+        listEquality.equals(e1?.translates, e2?.translates) &&
+        listEquality.equals(e1?.histories, e2?.histories) &&
+        e1?.createdTime == e2?.createdTime &&
+        listEquality.equals(e1?.history, e2?.history) &&
+        e1?.target == e2?.target;
   }
 
   @override
   int hash(DocumentsRecord? e) => const ListEquality().hash([
-        e?.name,
-        e?.createdAt,
-        e?.modifiedAt,
-        e?.onSale,
-        e?.price,
-        e?.specifications,
-        e?.quantity,
-        e?.salePrice
+        e?.email,
+        e?.translates,
+        e?.histories,
+        e?.createdTime,
+        e?.history,
+        e?.target
       ]);
 
   @override

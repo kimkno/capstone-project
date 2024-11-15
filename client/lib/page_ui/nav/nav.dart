@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
@@ -8,8 +10,12 @@ import '/backend/schema/structs/index.dart';
 import '/auth/base_auth_user_provider.dart';
 
 import '/index.dart';
-import '/page_ui/flutter_ui_theme.dart';
-import '/page_ui/flutter_ui_util.dart';
+import '/main.dart';
+import '/page_ui/page_ui_theme.dart';
+import '/page_ui/lat_lng.dart';
+import '/page_ui/place.dart';
+import '/page_ui/page_ui_util.dart';
+import 'serialization_util.dart';
 
 export 'package:go_router/go_router.dart';
 export 'serialization_util.dart';
@@ -74,15 +80,15 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       errorBuilder: (context, state) => appStateNotifier.loggedIn
-          ? const RequestByTextWidget()
-          : const CreateUserWidget(),
+          ? RequestByTextWidget()
+          : CreateUserWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
           builder: (context, _) => appStateNotifier.loggedIn
-              ? const RequestByTextWidget()
-              : const CreateUserWidget(),
+              ? RequestByTextWidget()
+              : CreateUserWidget(),
         ),
         FFRoute(
           name: 'RequestSplash',
@@ -95,9 +101,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           ),
         ),
         FFRoute(
-          name: 'ResultAnalysisByText',
-          path: '/resultAnalysisByText',
-          builder: (context, params) => ResultAnalysisByTextWidget(
+          name: 'ResultAnalysis',
+          path: '/resultAnalysis',
+          builder: (context, params) => ResultAnalysisWidget(
             result: params.getParam(
               'result',
               ParamType.JSON,
@@ -116,7 +122,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'Login',
           path: '/login',
-          builder: (context, params) => const LoginWidget(),
+          builder: (context, params) => LoginWidget(),
         ),
         FFRoute(
           name: 'RequestByImage',
@@ -131,27 +137,16 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               ParamType.String,
               isList: true,
             ),
-          ),
-        ),
-        FFRoute(
-          name: 'RecommendAnalysisByImage',
-          path: '/recommendAnalysisByImage',
-          builder: (context, params) => RecommendAnalysisByImageWidget(
-            syntax: params.getParam<dynamic>(
-              'syntax',
-              ParamType.JSON,
-              isList: true,
-            ),
-            result: params.getParam(
-              'result',
-              ParamType.JSON,
+            isImageOn: params.getParam(
+              'isImageOn',
+              ParamType.bool,
             ),
           ),
         ),
         FFRoute(
-          name: 'RecommendAnalysisByText',
-          path: '/recommendAnalysisByText',
-          builder: (context, params) => RecommendAnalysisByTextWidget(
+          name: 'RecommendAnalysis',
+          path: '/recommendAnalysis',
+          builder: (context, params) => RecommendAnalysisWidget(
             result: params.getParam(
               'result',
               ParamType.JSON,
@@ -179,28 +174,19 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           ),
         ),
         FFRoute(
-          name: 'ResultAnalysisByImage',
-          path: '/resultAnalysisByImage',
-          builder: (context, params) => ResultAnalysisByImageWidget(
-            result: params.getParam(
-              'result',
-              ParamType.JSON,
-            ),
-            inKr: params.getParam(
-              'inKr',
-              ParamType.String,
-            ),
-            syntax: params.getParam<dynamic>(
-              'syntax',
-              ParamType.JSON,
-              isList: true,
-            ),
-          ),
-        ),
-        FFRoute(
           name: 'CreateUser',
           path: '/createUser',
-          builder: (context, params) => const CreateUserWidget(),
+          builder: (context, params) => CreateUserWidget(),
+        ),
+        FFRoute(
+          name: 'AdminUserDetails',
+          path: '/adminUserDetails',
+          builder: (context, params) => AdminUserDetailsWidget(
+            targetEmail: params.getParam(
+              'targetEmail',
+              ParamType.String,
+            ),
+          ),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -440,7 +426,7 @@ class TransitionInfo {
   final Duration duration;
   final Alignment? alignment;
 
-  static TransitionInfo appDefault() => const TransitionInfo(hasTransition: false);
+  static TransitionInfo appDefault() => TransitionInfo(hasTransition: false);
 }
 
 class RootPageContext {

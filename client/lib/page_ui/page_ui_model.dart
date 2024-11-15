@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
+import 'page_ui_util.dart';
 
 Widget wrapWithModel<T extends FlutterFlowModel>({
   required T model,

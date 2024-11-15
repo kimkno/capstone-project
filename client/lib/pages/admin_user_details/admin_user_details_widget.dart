@@ -1,38 +1,38 @@
-import '/page_ui/flutter_ui_icon_button.dart';
-import '/page_ui/flutter_ui_theme.dart';
-import '/page_ui/flutter_ui_util.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/backend/backend.dart';
+import '/page_ui/page_ui_icon_button.dart';
+import '/page_ui/page_ui_theme.dart';
+import '/page_ui/page_ui_util.dart';
+import '/page_ui/page_ui_widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'result_analysis_by_text_model.dart';
-export 'result_analysis_by_text_model.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'admin_user_details_model.dart';
+export 'admin_user_details_model.dart';
 
-class ResultAnalysisByTextWidget extends StatefulWidget {
-  const ResultAnalysisByTextWidget({
+class AdminUserDetailsWidget extends StatefulWidget {
+  const AdminUserDetailsWidget({
     super.key,
-    this.result,
-    required this.inKr,
-    this.syntax,
+    required this.targetEmail,
   });
 
-  final dynamic result;
-  final String? inKr;
-  final List<dynamic>? syntax;
+  final String? targetEmail;
 
   @override
-  State<ResultAnalysisByTextWidget> createState() =>
-      _ResultAnalysisByTextWidgetState();
+  State<AdminUserDetailsWidget> createState() => _AdminUserDetailsWidgetState();
 }
 
-class _ResultAnalysisByTextWidgetState
-    extends State<ResultAnalysisByTextWidget> {
-  late ResultAnalysisByTextModel _model;
+class _AdminUserDetailsWidgetState extends State<AdminUserDetailsWidget> {
+  late AdminUserDetailsModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ResultAnalysisByTextModel());
+    _model = createModel(context, () => AdminUserDetailsModel());
   }
 
   @override
@@ -50,33 +50,32 @@ class _ResultAnalysisByTextWidgetState
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: FlutterFlowTheme.of(context).primary,
           automaticallyImplyLeading: false,
           leading: FlutterFlowIconButton(
-            borderColor: Colors.transparent,
+            borderColor: Color(0x00FFFFFF),
             borderRadius: 30.0,
             borderWidth: 1.0,
             buttonSize: 60.0,
-            icon: const Icon(
-              Icons.arrow_back_rounded,
-              color: Color(0xFF15161E),
+            icon: Icon(
+              Icons.chevron_left,
+              color: Colors.white,
               size: 30.0,
             ),
             onPressed: () async {
-              context.pushNamed('RequestByText');
+              context.safePop();
             },
           ),
           title: Text(
-            '분석 결과',
-            style: FlutterFlowTheme.of(context).titleLarge.override(
-                  fontFamily: 'Outfit',
-                  color: const Color(0xFF15161E),
+            'Admin Dashboard',
+            style: FlutterFlowTheme.of(context).titleSmall.override(
+                  fontFamily: 'Readex Pro',
                   fontSize: 22.0,
                   letterSpacing: 0.0,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.normal,
                 ),
           ),
-          actions: const [],
+          actions: [],
           centerTitle: false,
           elevation: 0.0,
         ),
@@ -104,13 +103,13 @@ class _ResultAnalysisByTextWidgetState
                   ),
                   child: Padding(
                     padding:
-                        const EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 16.0),
+                        EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 16.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
+                          padding: EdgeInsetsDirectional.fromSTEB(
                               16.0, 0.0, 16.0, 12.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
@@ -121,7 +120,7 @@ class _ResultAnalysisByTextWidgetState
                                 size: 32.0,
                               ),
                               Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                padding: EdgeInsetsDirectional.fromSTEB(
                                     12.0, 0.0, 0.0, 0.0),
                                 child: Text(
                                   'check.io',
@@ -147,7 +146,7 @@ class _ResultAnalysisByTextWidgetState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 12.0, 0.0, 0.0),
                                 child: Text(
                                   'Platform Navigation',
@@ -160,10 +159,10 @@ class _ResultAnalysisByTextWidgetState
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 0.0, 16.0, 0.0),
                                 child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
+                                  duration: Duration(milliseconds: 200),
                                   curve: Curves.easeInOut,
                                   width: double.infinity,
                                   height: 44.0,
@@ -174,7 +173,7 @@ class _ResultAnalysisByTextWidgetState
                                     shape: BoxShape.rectangle,
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
                                         8.0, 0.0, 6.0, 0.0),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
@@ -187,7 +186,7 @@ class _ResultAnalysisByTextWidgetState
                                         ),
                                         Padding(
                                           padding:
-                                              const EdgeInsetsDirectional.fromSTEB(
+                                              EdgeInsetsDirectional.fromSTEB(
                                                   12.0, 0.0, 0.0, 0.0),
                                           child: Text(
                                             'Dashboard',
@@ -205,10 +204,10 @@ class _ResultAnalysisByTextWidgetState
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 0.0, 16.0, 0.0),
                                 child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
+                                  duration: Duration(milliseconds: 200),
                                   curve: Curves.easeInOut,
                                   width: double.infinity,
                                   height: 44.0,
@@ -219,7 +218,7 @@ class _ResultAnalysisByTextWidgetState
                                     shape: BoxShape.rectangle,
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
                                         8.0, 0.0, 6.0, 0.0),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
@@ -232,7 +231,7 @@ class _ResultAnalysisByTextWidgetState
                                         ),
                                         Padding(
                                           padding:
-                                              const EdgeInsetsDirectional.fromSTEB(
+                                              EdgeInsetsDirectional.fromSTEB(
                                                   12.0, 0.0, 0.0, 0.0),
                                           child: Text(
                                             'Chats',
@@ -250,10 +249,10 @@ class _ResultAnalysisByTextWidgetState
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 0.0, 16.0, 0.0),
                                 child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
+                                  duration: Duration(milliseconds: 200),
                                   curve: Curves.easeInOut,
                                   width: double.infinity,
                                   height: 44.0,
@@ -264,7 +263,7 @@ class _ResultAnalysisByTextWidgetState
                                     shape: BoxShape.rectangle,
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
                                         8.0, 0.0, 6.0, 0.0),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
@@ -277,7 +276,7 @@ class _ResultAnalysisByTextWidgetState
                                         ),
                                         Padding(
                                           padding:
-                                              const EdgeInsetsDirectional.fromSTEB(
+                                              EdgeInsetsDirectional.fromSTEB(
                                                   12.0, 0.0, 0.0, 0.0),
                                           child: Text(
                                             'Projects',
@@ -295,7 +294,7 @@ class _ResultAnalysisByTextWidgetState
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 0.0, 0.0, 0.0),
                                 child: Text(
                                   'Settings',
@@ -308,10 +307,10 @@ class _ResultAnalysisByTextWidgetState
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 0.0, 16.0, 0.0),
                                 child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
+                                  duration: Duration(milliseconds: 200),
                                   curve: Curves.easeInOut,
                                   width: double.infinity,
                                   height: 44.0,
@@ -321,7 +320,7 @@ class _ResultAnalysisByTextWidgetState
                                     shape: BoxShape.rectangle,
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
                                         8.0, 0.0, 6.0, 0.0),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
@@ -335,7 +334,7 @@ class _ResultAnalysisByTextWidgetState
                                         Expanded(
                                           child: Padding(
                                             padding:
-                                                const EdgeInsetsDirectional.fromSTEB(
+                                                EdgeInsetsDirectional.fromSTEB(
                                                     12.0, 0.0, 0.0, 0.0),
                                             child: Text(
                                               'Notifications',
@@ -360,9 +359,9 @@ class _ResultAnalysisByTextWidgetState
                                           ),
                                           child: Align(
                                             alignment:
-                                                const AlignmentDirectional(0.0, 0.0),
+                                                AlignmentDirectional(0.0, 0.0),
                                             child: Padding(
-                                              padding: const EdgeInsetsDirectional
+                                              padding: EdgeInsetsDirectional
                                                   .fromSTEB(8.0, 4.0, 8.0, 4.0),
                                               child: Text(
                                                 '12',
@@ -387,10 +386,10 @@ class _ResultAnalysisByTextWidgetState
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 0.0, 16.0, 0.0),
                                 child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
+                                  duration: Duration(milliseconds: 200),
                                   curve: Curves.easeInOut,
                                   width: double.infinity,
                                   height: 44.0,
@@ -401,7 +400,7 @@ class _ResultAnalysisByTextWidgetState
                                     shape: BoxShape.rectangle,
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
                                         8.0, 0.0, 6.0, 0.0),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
@@ -414,7 +413,7 @@ class _ResultAnalysisByTextWidgetState
                                         ),
                                         Padding(
                                           padding:
-                                              const EdgeInsetsDirectional.fromSTEB(
+                                              EdgeInsetsDirectional.fromSTEB(
                                                   12.0, 0.0, 0.0, 0.0),
                                           child: Text(
                                             'Billing',
@@ -432,10 +431,10 @@ class _ResultAnalysisByTextWidgetState
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                padding: EdgeInsetsDirectional.fromSTEB(
                                     16.0, 0.0, 16.0, 0.0),
                                 child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
+                                  duration: Duration(milliseconds: 200),
                                   curve: Curves.easeInOut,
                                   width: double.infinity,
                                   height: 44.0,
@@ -446,7 +445,7 @@ class _ResultAnalysisByTextWidgetState
                                     shape: BoxShape.rectangle,
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
                                         8.0, 0.0, 6.0, 0.0),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
@@ -459,7 +458,7 @@ class _ResultAnalysisByTextWidgetState
                                         ),
                                         Padding(
                                           padding:
-                                              const EdgeInsetsDirectional.fromSTEB(
+                                              EdgeInsetsDirectional.fromSTEB(
                                                   12.0, 0.0, 0.0, 0.0),
                                           child: Text(
                                             'Explore',
@@ -476,13 +475,13 @@ class _ResultAnalysisByTextWidgetState
                                   ),
                                 ),
                               ),
-                            ].divide(const SizedBox(height: 12.0)),
+                            ].divide(SizedBox(height: 12.0)),
                           ),
                         ),
                         Align(
-                          alignment: const AlignmentDirectional(0.0, -1.0),
+                          alignment: AlignmentDirectional(0.0, -1.0),
                           child: Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
+                            padding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 8.0, 0.0, 16.0),
                             child: Container(
                               width: 250.0,
@@ -497,7 +496,7 @@ class _ResultAnalysisByTextWidgetState
                                 ),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.all(4.0),
+                                padding: EdgeInsets.all(4.0),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -560,7 +559,7 @@ class _ResultAnalysisByTextWidgetState
                                                 size: 16.0,
                                               ),
                                               Padding(
-                                                padding: const EdgeInsetsDirectional
+                                                padding: EdgeInsetsDirectional
                                                     .fromSTEB(
                                                         4.0, 0.0, 0.0, 0.0),
                                                 child: Text(
@@ -649,7 +648,7 @@ class _ResultAnalysisByTextWidgetState
                                                 size: 16.0,
                                               ),
                                               Padding(
-                                                padding: const EdgeInsetsDirectional
+                                                padding: EdgeInsetsDirectional
                                                     .fromSTEB(
                                                         4.0, 0.0, 0.0, 0.0),
                                                 child: Text(
@@ -692,7 +691,7 @@ class _ResultAnalysisByTextWidgetState
                           color: FlutterFlowTheme.of(context).alternate,
                         ),
                         Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
+                          padding: EdgeInsetsDirectional.fromSTEB(
                               16.0, 12.0, 16.0, 12.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
@@ -709,14 +708,14 @@ class _ResultAnalysisByTextWidgetState
                                   ),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(2.0),
+                                  padding: EdgeInsets.all(2.0),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8.0),
                                     child: CachedNetworkImage(
                                       fadeInDuration:
-                                          const Duration(milliseconds: 500),
+                                          Duration(milliseconds: 500),
                                       fadeOutDuration:
-                                          const Duration(milliseconds: 500),
+                                          Duration(milliseconds: 500),
                                       imageUrl:
                                           'https://images.unsplash.com/photo-1624561172888-ac93c696e10c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NjJ8fHVzZXJzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=900&q=60',
                                       width: 44.0,
@@ -728,7 +727,7 @@ class _ResultAnalysisByTextWidgetState
                               ),
                               Expanded(
                                 child: Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
                                       12.0, 0.0, 0.0, 0.0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.max,
@@ -761,7 +760,7 @@ class _ResultAnalysisByTextWidgetState
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
+                          padding: EdgeInsetsDirectional.fromSTEB(
                               16.0, 0.0, 16.0, 0.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
@@ -782,238 +781,200 @@ class _ResultAnalysisByTextWidgetState
                 ),
               Expanded(
                 child: Align(
-                  alignment: const AlignmentDirectional(0.0, -1.0),
+                  alignment: AlignmentDirectional(0.0, -1.0),
                   child: Container(
                     width: double.infinity,
-                    constraints: const BoxConstraints(
+                    constraints: BoxConstraints(
                       maxWidth: 1170.0,
                     ),
-                    decoration: const BoxDecoration(),
+                    decoration: BoxDecoration(),
                     child: Align(
-                      alignment: const AlignmentDirectional(0.0, 0.0),
+                      alignment: AlignmentDirectional(0.0, 0.0),
                       child: Padding(
-                        padding: const EdgeInsets.all(4.0),
+                        padding: EdgeInsets.all(4.0),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
+                              padding: EdgeInsetsDirectional.fromSTEB(
                                   16.0, 12.0, 16.0, 12.0),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Flexible(
-                                    child: Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          16.0, 0.0, 0.0, 0.0),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                const EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 12.0),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Align(
-                                                  alignment:
-                                                      const AlignmentDirectional(
-                                                          -1.0, 0.0),
-                                                  child: RichText(
-                                                    textScaler:
-                                                        MediaQuery.of(context)
-                                                            .textScaler,
-                                                    text: TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                          text: '해설',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyLarge
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Readex Pro',
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primary,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                              ),
-                                                        )
-                                                      ],
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyLarge
-                                                          .override(
-                                                            fontFamily:
-                                                                'Readex Pro',
-                                                            letterSpacing: 0.0,
-                                                          ),
-                                                    ),
-                                                    textAlign: TextAlign.start,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  0.0, 40.0, 0.0, 30.0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Align(
+                                                alignment: AlignmentDirectional(
+                                                    -1.0, 0.0),
+                                                child: RichText(
+                                                  textScaler:
+                                                      MediaQuery.of(context)
+                                                          .textScaler,
+                                                  text: TextSpan(
+                                                    children: [
+                                                      TextSpan(
+                                                        text: 'User Details',
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyLarge
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'Readex Pro',
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primary,
+                                                                  fontSize:
+                                                                      20.0,
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .normal,
+                                                                ),
+                                                      )
+                                                    ],
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyLarge
+                                                        .override(
+                                                          fontFamily:
+                                                              'Readex Pro',
+                                                          fontSize: 20.0,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.w300,
+                                                        ),
                                                   ),
+                                                  textAlign: TextAlign.start,
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                          Container(
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryBackground,
-                                              borderRadius:
-                                                  BorderRadius.circular(12.0),
-                                              border: Border.all(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .alternate,
-                                                width: 2.0,
                                               ),
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(12.0),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 4.0,
-                                                                0.0, 0.0),
-                                                    child: Text(
-                                                      valueOrDefault<String>(
-                                                        widget.inKr,
-                                                        '-',
-                                                      ),
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyLarge
-                                                          .override(
-                                                            fontFamily:
-                                                                'Readex Pro',
-                                                            letterSpacing: 0.0,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
+                              padding: EdgeInsetsDirectional.fromSTEB(
                                   16.0, 12.0, 16.0, 12.0),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Flexible(
-                                    child: Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          16.0, 0.0, 0.0, 0.0),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                const EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 12.0),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Align(
-                                                  alignment:
-                                                      const AlignmentDirectional(
-                                                          -1.0, 0.0),
-                                                  child: RichText(
-                                                    textScaler:
-                                                        MediaQuery.of(context)
-                                                            .textScaler,
-                                                    text: TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                          text: '분석',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyLarge
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Readex Pro',
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primary,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                              ),
-                                                        )
-                                                      ],
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  -1.0, 0.0),
+                                              child: RichText(
+                                                textScaler:
+                                                    MediaQuery.of(context)
+                                                        .textScaler,
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text: 'History',
                                                       style: FlutterFlowTheme
                                                               .of(context)
                                                           .bodyLarge
                                                           .override(
                                                             fontFamily:
                                                                 'Readex Pro',
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .primary,
                                                             letterSpacing: 0.0,
+                                                            fontWeight:
+                                                                FontWeight.w300,
                                                           ),
-                                                    ),
-                                                    textAlign: TextAlign.start,
-                                                  ),
+                                                    )
+                                                  ],
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyLarge
+                                                      .override(
+                                                        fontFamily:
+                                                            'Readex Pro',
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w200,
+                                                      ),
                                                 ),
-                                                Container(
-                                                  width: 12.0,
-                                                  height: 12.0,
-                                                  decoration: BoxDecoration(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .primary,
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                ),
-                                              ],
+                                                textAlign: TextAlign.start,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
                             ),
                             Expanded(
-                              child: Builder(
-                                builder: (context) {
-                                  final result = widget.result?.toList() ?? [];
+                              child: StreamBuilder<List<DocumentsRecord>>(
+                                stream: queryDocumentsRecord(
+                                  queryBuilder: (documentsRecord) =>
+                                      documentsRecord
+                                          .where(
+                                            'email',
+                                            isEqualTo: widget!.targetEmail,
+                                            isNull:
+                                                (widget!.targetEmail) == null,
+                                          )
+                                          .orderBy('created_time'),
+                                ),
+                                builder: (context, snapshot) {
+                                  // Customize what your widget looks like when it's loading.
+                                  if (!snapshot.hasData) {
+                                    return Center(
+                                      child: SizedBox(
+                                        width: 50.0,
+                                        height: 50.0,
+                                        child: CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                            FlutterFlowTheme.of(context)
+                                                .primary,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  List<DocumentsRecord>
+                                      adminListViewDocumentsRecordList =
+                                      snapshot.data!;
 
                                   return ListView.separated(
-                                    padding: const EdgeInsets.fromLTRB(
+                                    padding: EdgeInsets.fromLTRB(
                                       0,
                                       10.0,
                                       0,
@@ -1021,14 +982,17 @@ class _ResultAnalysisByTextWidgetState
                                     ),
                                     shrinkWrap: true,
                                     scrollDirection: Axis.vertical,
-                                    itemCount: result.length,
+                                    itemCount:
+                                        adminListViewDocumentsRecordList.length,
                                     separatorBuilder: (_, __) =>
-                                        const SizedBox(height: 1.0),
-                                    itemBuilder: (context, resultIndex) {
-                                      final resultItem = result[resultIndex];
+                                        SizedBox(height: 1.0),
+                                    itemBuilder: (context, adminListViewIndex) {
+                                      final adminListViewDocumentsRecord =
+                                          adminListViewDocumentsRecordList[
+                                              adminListViewIndex];
                                       return Container(
                                         width: 100.0,
-                                        height: 81.0,
+                                        height: 96.0,
                                         decoration: BoxDecoration(
                                           color: FlutterFlowTheme.of(context)
                                               .secondaryBackground,
@@ -1038,7 +1002,7 @@ class _ResultAnalysisByTextWidgetState
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .alternate,
-                                              offset: const Offset(
+                                              offset: Offset(
                                                 0.0,
                                                 1.0,
                                               ),
@@ -1046,11 +1010,11 @@ class _ResultAnalysisByTextWidgetState
                                           ],
                                         ),
                                         alignment:
-                                            const AlignmentDirectional(0.0, 0.0),
+                                            AlignmentDirectional(0.0, 0.0),
                                         child: Padding(
                                           padding:
-                                              const EdgeInsetsDirectional.fromSTEB(
-                                                  16.0, 12.0, 24.0, 12.0),
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  5.0, 5.0, 5.0, 5.0),
                                           child: Row(
                                             mainAxisSize: MainAxisSize.max,
                                             crossAxisAlignment:
@@ -1059,13 +1023,13 @@ class _ResultAnalysisByTextWidgetState
                                               Flexible(
                                                 child: Align(
                                                   alignment:
-                                                      const AlignmentDirectional(
+                                                      AlignmentDirectional(
                                                           0.0, 0.0),
                                                   child: Padding(
                                                     padding:
-                                                        const EdgeInsetsDirectional
-                                                            .fromSTEB(16.0, 0.0,
-                                                                0.0, 0.0),
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 0.0,
+                                                                10.0, 0.0),
                                                     child: Column(
                                                       mainAxisSize:
                                                           MainAxisSize.max,
@@ -1081,7 +1045,7 @@ class _ResultAnalysisByTextWidgetState
                                                             opacity: 0.6,
                                                             child: Align(
                                                               alignment:
-                                                                  const AlignmentDirectional(
+                                                                  AlignmentDirectional(
                                                                       0.0, 0.0),
                                                               child: Material(
                                                                 color: Colors
@@ -1114,23 +1078,21 @@ class _ResultAnalysisByTextWidgetState
                                                                       color: FlutterFlowTheme.of(
                                                                               context)
                                                                           .alternate,
-                                                                      width:
-                                                                          2.0,
                                                                     ),
                                                                   ),
                                                                   alignment:
-                                                                      const AlignmentDirectional(
+                                                                      AlignmentDirectional(
                                                                           0.0,
                                                                           0.0),
                                                                   child: Align(
                                                                     alignment:
-                                                                        const AlignmentDirectional(
+                                                                        AlignmentDirectional(
                                                                             0.0,
                                                                             0.0),
                                                                     child:
                                                                         Padding(
                                                                       padding:
-                                                                          const EdgeInsets.all(
+                                                                          EdgeInsets.all(
                                                                               12.0),
                                                                       child:
                                                                           SingleChildScrollView(
@@ -1144,78 +1106,116 @@ class _ResultAnalysisByTextWidgetState
                                                                               CrossAxisAlignment.start,
                                                                           children: [
                                                                             Align(
-                                                                              alignment: const AlignmentDirectional(-1.0, 0.0),
-                                                                              child: SingleChildScrollView(
-                                                                                scrollDirection: Axis.horizontal,
+                                                                              alignment: AlignmentDirectional(0.0, 0.0),
+                                                                              child: Padding(
+                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 16.0, 0.0),
                                                                                 child: Row(
                                                                                   mainAxisSize: MainAxisSize.max,
+                                                                                  mainAxisAlignment: MainAxisAlignment.start,
                                                                                   children: [
-                                                                                    Align(
-                                                                                      alignment: const AlignmentDirectional(-1.0, 0.0),
-                                                                                      child: RichText(
-                                                                                        textScaler: MediaQuery.of(context).textScaler,
-                                                                                        text: TextSpan(
-                                                                                          children: [
-                                                                                            TextSpan(
-                                                                                              text: getJsonField(
-                                                                                                resultItem,
-                                                                                                r'''$.word''',
-                                                                                              ).toString(),
-                                                                                              style: FlutterFlowTheme.of(context).bodyLarge.override(
-                                                                                                    fontFamily: 'Readex Pro',
-                                                                                                    color: FlutterFlowTheme.of(context).primary,
-                                                                                                    letterSpacing: 0.0,
-                                                                                                    fontWeight: FontWeight.w600,
-                                                                                                  ),
-                                                                                            )
-                                                                                          ],
-                                                                                          style: FlutterFlowTheme.of(context).bodyLarge.override(
+                                                                                    Padding(
+                                                                                      padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 0.0),
+                                                                                      child: Container(
+                                                                                        decoration: BoxDecoration(
+                                                                                          shape: BoxShape.rectangle,
+                                                                                        ),
+                                                                                        alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                        child: Text(
+                                                                                          adminListViewDocumentsRecord.target,
+                                                                                          style: FlutterFlowTheme.of(context).titleMedium.override(
                                                                                                 fontFamily: 'Readex Pro',
+                                                                                                color: FlutterFlowTheme.of(context).primary,
+                                                                                                fontSize: 13.0,
                                                                                                 letterSpacing: 0.0,
                                                                                               ),
                                                                                         ),
-                                                                                        textAlign: TextAlign.start,
                                                                                       ),
                                                                                     ),
-                                                                                    Padding(
-                                                                                      padding: const EdgeInsetsDirectional.fromSTEB(10.0, 4.0, 0.0, 0.0),
-                                                                                      child: Text(
-                                                                                        getJsonField(
-                                                                                          resultItem,
-                                                                                          r'''$.syntax''',
-                                                                                        ).toString(),
-                                                                                        style: FlutterFlowTheme.of(context).bodyLarge.override(
-                                                                                              fontFamily: 'Readex Pro',
-                                                                                              letterSpacing: 0.0,
-                                                                                            ),
-                                                                                      ),
-                                                                                    ),
-                                                                                    if (getJsonField(
-                                                                                          resultItem,
-                                                                                          r'''$.comment''',
-                                                                                        ) !=
-                                                                                        null)
-                                                                                      Opacity(
-                                                                                        opacity: 0.6,
-                                                                                        child: Align(
-                                                                                          alignment: const AlignmentDirectional(-1.0, 0.0),
-                                                                                          child: Padding(
-                                                                                            padding: const EdgeInsetsDirectional.fromSTEB(10.0, 4.0, 0.0, 0.0),
-                                                                                            child: SelectionArea(
-                                                                                                child: Text(
-                                                                                              getJsonField(
-                                                                                                resultItem,
-                                                                                                r'''$.comment''',
-                                                                                              ).toString(),
-                                                                                              textAlign: TextAlign.start,
-                                                                                              style: FlutterFlowTheme.of(context).bodyLarge.override(
-                                                                                                    fontFamily: 'Readex Pro',
-                                                                                                    letterSpacing: 0.0,
-                                                                                                  ),
-                                                                                            )),
+                                                                                    Expanded(
+                                                                                      child: Padding(
+                                                                                        padding: EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 12.0, 0.0),
+                                                                                        child: Text(
+                                                                                          valueOrDefault<String>(
+                                                                                            adminListViewDocumentsRecord.createdTime?.toString(),
+                                                                                            '-',
                                                                                           ),
+                                                                                          textAlign: TextAlign.end,
+                                                                                          style: FlutterFlowTheme.of(context).bodyLarge.override(
+                                                                                                fontFamily: 'Readex Pro',
+                                                                                                fontSize: 12.0,
+                                                                                                letterSpacing: 0.0,
+                                                                                              ),
                                                                                         ),
                                                                                       ),
+                                                                                    ),
+                                                                                    Align(
+                                                                                      alignment: AlignmentDirectional(1.0, 0.0),
+                                                                                      child: FlutterFlowIconButton(
+                                                                                        borderRadius: 10.0,
+                                                                                        borderWidth: 20.0,
+                                                                                        icon: Icon(
+                                                                                          Icons.arrow_forward_ios,
+                                                                                          color: FlutterFlowTheme.of(context).primary,
+                                                                                          size: 15.0,
+                                                                                        ),
+                                                                                        onPressed: () async {
+                                                                                          // Call JellyGrammar
+                                                                                          _model.adminAnalysisResult = await AnalysisCall.call(
+                                                                                            prompt: adminListViewDocumentsRecord.target,
+                                                                                          );
+
+                                                                                          if ((_model.adminAnalysisResult?.succeeded ?? true)) {
+                                                                                            if (getJsonField(
+                                                                                                  (_model.adminAnalysisResult?.jsonBody ?? ''),
+                                                                                                  r'''$.result''',
+                                                                                                ) !=
+                                                                                                null) {
+                                                                                              context.pushNamed(
+                                                                                                'ResultAnalysis',
+                                                                                                queryParameters: {
+                                                                                                  'result': serializeParam(
+                                                                                                    getJsonField(
+                                                                                                      (_model.adminAnalysisResult?.jsonBody ?? ''),
+                                                                                                      r'''$.result.*''',
+                                                                                                    ),
+                                                                                                    ParamType.JSON,
+                                                                                                  ),
+                                                                                                  'inKr': serializeParam(
+                                                                                                    getJsonField(
+                                                                                                      (_model.adminAnalysisResult?.jsonBody ?? ''),
+                                                                                                      r'''$.kr''',
+                                                                                                    ).toString(),
+                                                                                                    ParamType.String,
+                                                                                                  ),
+                                                                                                }.withoutNulls,
+                                                                                              );
+                                                                                            } else {
+                                                                                              context.pushNamed(
+                                                                                                'RequestSplash',
+                                                                                                queryParameters: {
+                                                                                                  'targetSentence': serializeParam(
+                                                                                                    '유효하지 않은 문장입니다!',
+                                                                                                    ParamType.String,
+                                                                                                  ),
+                                                                                                }.withoutNulls,
+                                                                                              );
+                                                                                            }
+                                                                                          } else {
+                                                                                            context.pushNamed(
+                                                                                              'RequestSplash',
+                                                                                              queryParameters: {
+                                                                                                'targetSentence': serializeParam(
+                                                                                                  '네트워크 오류로 분석이 실패했습니다!',
+                                                                                                  ParamType.String,
+                                                                                                ),
+                                                                                              }.withoutNulls,
+                                                                                            );
+                                                                                          }
+
+                                                                                          safeSetState(() {});
+                                                                                        },
+                                                                                      ),
+                                                                                    ),
                                                                                   ],
                                                                                 ),
                                                                               ),

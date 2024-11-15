@@ -1,8 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-
-import '/page_ui/flutter_ui_util.dart';
+import '/page_ui/page_ui_util.dart';
 import 'api_manager.dart';
 
 export 'api_manager.dart' show ApiCallResponse;
@@ -15,7 +14,7 @@ class AnalysisCall {
   }) async {
     final ffApiRequestBody = '''
 {
-  "prompt": "$prompt"
+  "prompt": "${prompt}"
 }''';
     return ApiManager.instance.makeApiCall(
       callName: 'analysis',
