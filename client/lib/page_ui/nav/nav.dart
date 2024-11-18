@@ -171,22 +171,20 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               ParamType.String,
               isList: true,
             ),
+            targetEmail: params.getParam(
+              'targetEmail',
+              ParamType.String,
+            ),
+            searchType: params.getParam(
+              'searchType',
+              ParamType.String,
+            ),
           ),
         ),
         FFRoute(
           name: 'CreateUser',
           path: '/createUser',
           builder: (context, params) => CreateUserWidget(),
-        ),
-        FFRoute(
-          name: 'AdminUserDetails',
-          path: '/adminUserDetails',
-          builder: (context, params) => AdminUserDetailsWidget(
-            targetEmail: params.getParam(
-              'targetEmail',
-              ParamType.String,
-            ),
-          ),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

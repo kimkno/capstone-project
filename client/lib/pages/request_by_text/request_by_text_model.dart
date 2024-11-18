@@ -1,3 +1,4 @@
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/page_ui/page_ui_util.dart';
 import '/page_ui/form_field_controller.dart';
@@ -22,6 +23,9 @@ class RequestByTextModel extends FlutterFlowModel<RequestByTextWidget> {
       choiceChipsValueController?.value?.firstOrNull;
   set choiceChipsValue(String? val) =>
       choiceChipsValueController?.value = val != null ? [val] : [];
+  ApiCallResponse? adminAnalysisDefaultResult;
+  ApiCallResponse? adminAnalysisResultByEmail;
+  ApiCallResponse? adminAnalysisSortedResult;
 
   @override
   void initState(BuildContext context) {}

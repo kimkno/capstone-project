@@ -1,14 +1,18 @@
 import 'dart:io';
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/backend.dart';
 import '/page_ui/page_ui_animations.dart';
 import '/page_ui/page_ui_theme.dart';
 import '/page_ui/page_ui_util.dart';
 import '/page_ui/page_ui_widgets.dart';
+import '/page_ui/random_data_util.dart' as random_data;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'request_by_image_model.dart';
 export 'request_by_image_model.dart';
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
@@ -454,6 +458,22 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                                           ),
                                                                         }.withoutNulls,
                                                                       );
+                                                                      // Save the Document with Image
+                                                                      await DocumentsRecord
+                                                                          .collection
+                                                                          .doc()
+                                                                          .set({
+                                                                        ...createDocumentsRecordData(
+                                                                          email: currentUserEmail,
+                                                                          target: _model.targetTextController.text,
+                                                                          imgUrl: random_data.randomImageUrl(200, 200,),
+                                                                        ),
+                                                                        ...mapToFirestore(
+                                                                          {
+                                                                            'created_time': FieldValue.serverTimestamp(),
+                                                                          },
+                                                                        ),
+                                                                      });
                                                                     } else {
                                                                       context
                                                                           .pushNamed(
@@ -690,7 +710,7 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                                         } else {
                                                                           await showDialog(
                                                                             context:
-                                                                            context,
+                                                                                context,
                                                                             builder:
                                                                                 (alertDialogContext) {
                                                                               return AlertDialog(
