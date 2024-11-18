@@ -2,18 +2,18 @@ import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
 import '/page_ui/page_ui_animations.dart';
+import '/page_ui/page_ui_choice_chips.dart';
 import '/page_ui/page_ui_icon_button.dart';
 import '/page_ui/page_ui_theme.dart';
 import '/page_ui/page_ui_util.dart';
 import '/page_ui/page_ui_widgets.dart';
-import 'dart:math';
+import '/page_ui/form_field_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'request_by_text_model.dart';
 export 'request_by_text_model.dart';
 
@@ -22,10 +22,15 @@ class RequestByTextWidget extends StatefulWidget {
     super.key,
     this.targetSentence,
     this.recommends,
-  });
+    String? targetEmail,
+    String? searchType,
+  })  : this.targetEmail = targetEmail ?? '',
+        this.searchType = searchType ?? 'default';
 
   final String? targetSentence;
   final List<String>? recommends;
+  final String targetEmail;
+  final String searchType;
 
   @override
   State<RequestByTextWidget> createState() => _RequestByTextWidgetState();
@@ -51,6 +56,9 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
     )..addListener(() => safeSetState(() {}));
     _model.targetTextController ??= TextEditingController();
     _model.targetFocusNode ??= FocusNode();
+
+    _model.targetUserTextController ??= TextEditingController();
+    _model.targetUserFocusNode ??= FocusNode();
 
     animationsMap.addAll({
       'containerOnPageLoadAnimation': AnimationInfo(
@@ -1024,217 +1032,531 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                 ),
                                 Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      16.0, 12.0, 16.0, 12.0),
+                                      16.0, 8.0, 16.0, 12.0),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
                                     children: [
-                                      Flexible(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          -1.0, 0.0),
-                                                  child: RichText(
-                                                    textScaler:
-                                                        MediaQuery.of(context)
-                                                            .textScaler,
-                                                    text: TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                          text: '회원 ID',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyLarge
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Readex Pro',
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primary,
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w300,
-                                                              ),
-                                                        )
-                                                      ],
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyLarge
-                                                          .override(
-                                                            fontFamily:
-                                                                'Readex Pro',
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w200,
-                                                          ),
+                                      Expanded(
+                                        child: TextFormField(
+                                          controller:
+                                              _model.targetUserTextController,
+                                          focusNode: _model.targetUserFocusNode,
+                                          onChanged: (_) =>
+                                              EasyDebounce.debounce(
+                                            '_model.targetUserTextController',
+                                            Duration(milliseconds: 2000),
+                                            () => safeSetState(() {}),
+                                          ),
+                                          autofocus: true,
+                                          obscureText: false,
+                                          decoration: InputDecoration(
+                                            labelText:
+                                                'Search users by email...',
+                                            labelStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .labelMedium
+                                                    .override(
+                                                      fontFamily: 'Readex Pro',
+                                                      letterSpacing: 0.0,
                                                     ),
-                                                    textAlign: TextAlign.start,
-                                                  ),
-                                                ),
-                                                Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          -1.0, 0.0),
-                                                  child: RichText(
-                                                    textScaler:
-                                                        MediaQuery.of(context)
-                                                            .textScaler,
-                                                    text: TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                          text: '가입 일자',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyLarge
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Readex Pro',
-                                                                color: Color(
-                                                                    0xFF878787),
-                                                                letterSpacing:
-                                                                    0.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w300,
-                                                              ),
-                                                        )
-                                                      ],
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .bodyLarge
-                                                          .override(
-                                                            fontFamily:
-                                                                'Readex Pro',
-                                                            letterSpacing: 0.0,
-                                                            fontWeight:
-                                                                FontWeight.w200,
-                                                          ),
-                                                    ),
-                                                    textAlign: TextAlign.start,
-                                                  ),
-                                                ),
-                                              ],
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Color(0xB257636C),
+                                                width: 0.5,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
                                             ),
-                                          ],
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                width: 0.5,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .error,
+                                                width: 0.5,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
+                                            ),
+                                            focusedErrorBorder:
+                                                OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .error,
+                                                width: 0.5,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
+                                            ),
+                                            filled: true,
+                                            fillColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .secondaryBackground,
+                                          ),
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                fontFamily: 'Readex Pro',
+                                                letterSpacing: 0.0,
+                                              ),
+                                          validator: _model
+                                              .targetUserTextControllerValidator
+                                              .asValidator(context),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            5.0, 0.0, 0.0, 0.0),
+                                        child: FlutterFlowIconButton(
+                                          borderColor: Colors.transparent,
+                                          borderRadius: 30.0,
+                                          borderWidth: 1.0,
+                                          buttonSize: 40.0,
+                                          icon: Icon(
+                                            Icons.search_rounded,
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryText,
+                                            size: 15.0,
+                                          ),
+                                          onPressed: () async {
+                                            safeSetState(() {
+                                              _model.choiceChipsValueController?.value = ['email'];
+                                            });
+                                          },
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                                Expanded(
-                                  child: StreamBuilder<List<UsersRecord>>(
-                                    stream: queryUsersRecord(
-                                      queryBuilder: (usersRecord) =>
-                                          usersRecord.orderBy('created_time'),
-                                    ),
-                                    builder: (context, snapshot) {
-                                      // Customize what your widget looks like when it's loading.
-                                      if (!snapshot.hasData) {
-                                        return Center(
-                                          child: SizedBox(
-                                            width: 50.0,
-                                            height: 50.0,
-                                            child: CircularProgressIndicator(
-                                              valueColor:
-                                                  AlwaysStoppedAnimation<Color>(
-                                                FlutterFlowTheme.of(context)
-                                                    .primary,
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      16.0, 8.0, 16.0, 12.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Expanded(
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(0.0, 0.0),
+                                          child: FlutterFlowChoiceChips(
+                                            options: [
+                                              ChipData('가입 순'),
+                                              ChipData('전체 조회')
+                                            ],
+                                            onChanged: (val) async {
+                                              safeSetState(() =>
+                                                  _model.choiceChipsValue =
+                                                      val?.firstOrNull);
+                                              if (_model.choiceChipsValue ==
+                                                  '전체 조회') {
+                                                safeSetState(() {
+                                                  _model
+                                                      .choiceChipsValueController
+                                                      ?.value = ['default'];
+                                                });
+                                              } else {
+                                                safeSetState(() {
+                                                  _model
+                                                      .choiceChipsValueController
+                                                      ?.value = ['created'];
+                                                });
+                                              }
+                                            },
+                                            selectedChipStyle: ChipStyle(
+                                              backgroundColor:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              textStyle: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    fontFamily: 'Readex Pro',
+                                                    color: FlutterFlowTheme.of(context).info,
+                                                    letterSpacing: 0.0,
+                                                  ),
+                                              iconColor: FlutterFlowTheme.of(context).info,
+                                              iconSize: 16.0,
+                                              elevation: 0.0,
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                            unselectedChipStyle: ChipStyle(
+                                              backgroundColor: FlutterFlowTheme.of(context).secondaryBackground, textStyle: FlutterFlowTheme.of(context).bodyMedium
+                                                  .override(
+                                                    fontFamily: 'Readex Pro',
+                                                    color: FlutterFlowTheme.of(context).secondaryText,
+                                                    letterSpacing: 0.0,
+                                                  ),
+                                              iconColor: FlutterFlowTheme.of(context).secondaryText,
+                                              iconSize: 16.0,
+                                              elevation: 0.0,
+                                              borderRadius: BorderRadius.circular(8.0),
+                                            ),
+                                            chipSpacing: 8.0,
+                                            rowSpacing: 8.0,
+                                            multiselect: false,
+                                            alignment: WrapAlignment.start,
+                                            controller: _model.choiceChipsValueController ??= FormFieldController<List<String>>(
+                                              [],
+                                            ),
+                                            wrapped: true,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                if (_model.choiceChipsValue == 'default')
+                                  Expanded(
+                                    child: FutureBuilder<List<UsersRecord>>(
+                                      future: queryUsersRecordOnce(
+                                        queryBuilder: (usersRecord) =>
+                                            usersRecord.orderBy('created_time'),
+                                      ),
+                                      builder: (context, snapshot) {
+                                        if (!snapshot.hasData) {
+                                          return Center(
+                                            child: SizedBox(
+                                              width: 50.0,
+                                              height: 50.0,
+                                              child: CircularProgressIndicator(
+                                                valueColor: AlwaysStoppedAnimation<Color>(FlutterFlowTheme.of(context).primary,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        );
-                                      }
-                                      List<UsersRecord>
-                                          listViewUsersRecordList =
-                                          snapshot.data!;
+                                          );
+                                        }
+                                        List<UsersRecord>
+                                            defaultAdminViewUsersRecordList =
+                                            snapshot.data!
+                                                .where((u) =>
+                                                    u.uid != currentUserUid)
+                                                .toList();
+                                        return ListView.separated(
+                                          padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0,),
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.vertical,
+                                          itemCount: defaultAdminViewUsersRecordList.length,
+                                          separatorBuilder: (_, __) => SizedBox(height: 1.0),
+                                          itemBuilder: (context, defaultAdminViewIndex) {
+                                            final defaultAdminViewUsersRecord = defaultAdminViewUsersRecordList[defaultAdminViewIndex];
+                                            return Container(
+                                              width: 100.0,
+                                              height: 96.0,
+                                              decoration: BoxDecoration(
+                                                color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    blurRadius: 0.0,
+                                                    color: FlutterFlowTheme.of(context).alternate,
+                                                    offset: Offset(0.0, 1.0,),
+                                                  )
+                                                ],
+                                              ),
+                                              alignment: AlignmentDirectional(0.0, 0.0),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional.fromSTEB(5.0, 5.0, 5.0, 5.0),
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.max,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    Flexible(
+                                                      child: Align(
+                                                        alignment: AlignmentDirectional(0.0, 0.0),
+                                                        child: Padding(
+                                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 10.0, 0.0),
+                                                          child: Column(
+                                                            mainAxisSize: MainAxisSize.max,
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              Expanded(
+                                                                child: Opacity(
+                                                                  opacity: 0.8,
+                                                                  child: Align(
+                                                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                                                    child: Material(
+                                                                      color: Colors.transparent,
+                                                                      elevation: 1.0,
+                                                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0),
+                                                                      ),
+                                                                      child:
+                                                                          Container(
+                                                                        width: double.infinity,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color: FlutterFlowTheme.of(context).primaryBackground,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8.0),
+                                                                          shape:
+                                                                              BoxShape.rectangle,
+                                                                          border:
+                                                                              Border.all(
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).alternate,
+                                                                          ),
+                                                                        ),
+                                                                        alignment: AlignmentDirectional(
+                                                                            0.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            Align(
+                                                                          alignment: AlignmentDirectional(
+                                                                              0.0,
+                                                                              0.0),
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                EdgeInsets.all(12.0),
+                                                                            child:
+                                                                                SingleChildScrollView(
+                                                                              child: Column(
+                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                children: [
+                                                                                  Align(
+                                                                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                    child: Padding(
+                                                                                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 16.0, 0.0),
+                                                                                      child: Row(
+                                                                                        mainAxisSize: MainAxisSize.max,
+                                                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                                                        children: [
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 0.0),
+                                                                                            child: Container(
+                                                                                              decoration: BoxDecoration(
+                                                                                                shape: BoxShape.rectangle,
+                                                                                              ),
+                                                                                              alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                              child: Text(
+                                                                                                valueOrDefault<String>(
+                                                                                                  defaultAdminViewUsersRecord.email,
+                                                                                                  'test@email.com',
+                                                                                                ),
+                                                                                                style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                                      fontFamily: 'Readex Pro',
+                                                                                                      color: FlutterFlowTheme.of(context).primary,
+                                                                                                      fontSize: 13.0,
+                                                                                                      letterSpacing: 0.0,
+                                                                                                    ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                          Expanded(
+                                                                                            child: Padding(
+                                                                                              padding: EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 12.0, 0.0),
+                                                                                              child: Text(
+                                                                                                valueOrDefault<String>(
+                                                                                                  defaultAdminViewUsersRecord.createdTime?.toString(),
+                                                                                                  '-',
+                                                                                                ),
+                                                                                                textAlign: TextAlign.end,
+                                                                                                style: FlutterFlowTheme.of(context).bodyLarge.override(
+                                                                                                      fontFamily: 'Readex Pro',
+                                                                                                      fontSize: 13.0,
+                                                                                                      letterSpacing: 0.0,
+                                                                                                    ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                          Align(
+                                                                                            alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                            child: StreamBuilder<List<DocumentsRecord>>(
+                                                                                              stream: queryDocumentsRecord(
+                                                                                                queryBuilder: (documentsRecord) => documentsRecord.where(
+                                                                                                  'email',
+                                                                                                  isEqualTo: defaultAdminViewUsersRecord.email,
+                                                                                                ),
+                                                                                              ),
+                                                                                              builder: (context, snapshot) {
+                                                                                                // Customize what your widget looks like when it's loading.
+                                                                                                if (!snapshot.hasData) {
+                                                                                                  return Center(
+                                                                                                    child: SizedBox(
+                                                                                                      width: 50.0,
+                                                                                                      height: 50.0,
+                                                                                                      child: CircularProgressIndicator(
+                                                                                                        valueColor: AlwaysStoppedAnimation<Color>(
+                                                                                                          FlutterFlowTheme.of(context).primary,
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  );
+                                                                                                }
+                                                                                                List<DocumentsRecord> iconButtonDocumentsRecordList = snapshot.data!;
 
-                                      return ListView.separated(
-                                        padding: EdgeInsets.fromLTRB(
-                                          0,
-                                          10.0,
-                                          0,
-                                          10.0,
-                                        ),
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.vertical,
-                                        itemCount:
-                                            listViewUsersRecordList.length,
-                                        separatorBuilder: (_, __) =>
-                                            SizedBox(height: 1.0),
-                                        itemBuilder: (context, listViewIndex) {
-                                          final listViewUsersRecord =
-                                              listViewUsersRecordList[
-                                                  listViewIndex];
-                                          return Container(
-                                            width: 100.0,
-                                            height: 96.0,
-                                            decoration: BoxDecoration(
-                                              color:
+                                                                                                return FlutterFlowIconButton(
+                                                                                                  borderColor: Colors.transparent,
+                                                                                                  borderRadius: 1.0,
+                                                                                                  icon: Icon(
+                                                                                                    Icons.arrow_forward_ios,
+                                                                                                    color: FlutterFlowTheme.of(context).primary,
+                                                                                                    size: 15.0,
+                                                                                                  ),
+                                                                                                  onPressed: () async {
+                                                                                                    context.pushNamed(
+                                                                                                      'AdminUserDetails',
+                                                                                                      queryParameters: {
+                                                                                                        'targetEmail': serializeParam(
+                                                                                                          defaultAdminViewUsersRecord.email,
+                                                                                                          ParamType.String,
+                                                                                                        ),
+                                                                                                      }.withoutNulls,
+                                                                                                    );
+                                                                                                  },
+                                                                                                );
+                                                                                              },
+                                                                                            ),
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                if (_model.choiceChipsValue == 'created')
+                                  Expanded(
+                                    child: FutureBuilder<List<UsersRecord>>(
+                                      future: queryUsersRecordOnce(
+                                        queryBuilder: (usersRecord) =>
+                                            usersRecord.orderBy('created_time',
+                                                descending: true),
+                                      ),
+                                      builder: (context, snapshot) {
+                                        // Customize what your widget looks like when it's loading.
+                                        if (!snapshot.hasData) {
+                                          return Center(
+                                            child: SizedBox(
+                                              width: 50.0,
+                                              height: 50.0,
+                                              child: CircularProgressIndicator(
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(
                                                   FlutterFlowTheme.of(context)
-                                                      .secondaryBackground,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  blurRadius: 0.0,
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .alternate,
-                                                  offset: Offset(
-                                                    0.0,
-                                                    1.0,
-                                                  ),
-                                                )
-                                              ],
+                                                      .primary,
+                                                ),
+                                              ),
                                             ),
-                                            alignment:
-                                                AlignmentDirectional(0.0, 0.0),
-                                            child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(5.0, 5.0, 5.0, 5.0),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Flexible(
-                                                    child: Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0.0,
-                                                                    0.0,
-                                                                    10.0,
-                                                                    0.0),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Expanded(
-                                                              child: Opacity(
-                                                                opacity: 0.6,
+                                          );
+                                        }
+                                        List<UsersRecord>
+                                            emailAdminViewUsersRecordList =
+                                            snapshot.data!
+                                                .where((u) =>
+                                                    u.uid != currentUserUid)
+                                                .toList();
+
+                                        return ListView.separated(
+                                          padding: EdgeInsets.fromLTRB(
+                                            0,
+                                            10.0,
+                                            0,
+                                            10.0,
+                                          ),
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.vertical,
+                                          itemCount:
+                                              emailAdminViewUsersRecordList
+                                                  .length,
+                                          separatorBuilder: (_, __) =>
+                                              SizedBox(height: 1.0),
+                                          itemBuilder:
+                                              (context, emailAdminViewIndex) {
+                                            final emailAdminViewUsersRecord =
+                                                emailAdminViewUsersRecordList[
+                                                    emailAdminViewIndex];
+                                            return Container(
+                                              width: 100.0,
+                                              height: 96.0,
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryBackground,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    blurRadius: 0.0,
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .alternate,
+                                                    offset: Offset(
+                                                      0.0,
+                                                      1.0,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              alignment: AlignmentDirectional(
+                                                  0.0, 0.0),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        5.0, 5.0, 5.0, 5.0),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Flexible(
+                                                      child: Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      0.0,
+                                                                      0.0,
+                                                                      10.0,
+                                                                      0.0),
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Expanded(
                                                                 child: Align(
                                                                   alignment:
                                                                       AlignmentDirectional(
@@ -1308,7 +1630,7 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                                                             alignment: AlignmentDirectional(0.0, 0.0),
                                                                                             child: Text(
                                                                                               valueOrDefault<String>(
-                                                                                                listViewUsersRecord.email,
+                                                                                                emailAdminViewUsersRecord.email,
                                                                                                 'test@email.com',
                                                                                               ),
                                                                                               style: FlutterFlowTheme.of(context).titleMedium.override(
@@ -1325,7 +1647,7 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                                                             padding: EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 12.0, 0.0),
                                                                                             child: Text(
                                                                                               valueOrDefault<String>(
-                                                                                                listViewUsersRecord.createdTime?.toString(),
+                                                                                                emailAdminViewUsersRecord.createdTime?.toString(),
                                                                                                 '-',
                                                                                               ),
                                                                                               textAlign: TextAlign.end,
@@ -1341,12 +1663,10 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                                                           alignment: AlignmentDirectional(0.0, 0.0),
                                                                                           child: StreamBuilder<List<DocumentsRecord>>(
                                                                                             stream: queryDocumentsRecord(
-                                                                                              queryBuilder: (documentsRecord) => documentsRecord
-                                                                                                  .where(
-                                                                                                    'email',
-                                                                                                    isEqualTo: listViewUsersRecord.email,
-                                                                                                  )
-                                                                                                  .orderBy('created_time'),
+                                                                                              queryBuilder: (documentsRecord) => documentsRecord.where(
+                                                                                                'email',
+                                                                                                isEqualTo: emailAdminViewUsersRecord.email,
+                                                                                              ),
                                                                                             ),
                                                                                             builder: (context, snapshot) {
                                                                                               // Customize what your widget looks like when it's loading.
@@ -1368,6 +1688,7 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                                                               return FlutterFlowIconButton(
                                                                                                 borderColor: Colors.transparent,
                                                                                                 borderRadius: 1.0,
+                                                                                                buttonSize: 46.0,
                                                                                                 icon: Icon(
                                                                                                   Icons.arrow_forward_ios,
                                                                                                   color: FlutterFlowTheme.of(context).primary,
@@ -1378,7 +1699,7 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                                                                     'AdminUserDetails',
                                                                                                     queryParameters: {
                                                                                                       'targetEmail': serializeParam(
-                                                                                                        listViewUsersRecord.email,
+                                                                                                        emailAdminViewUsersRecord.email,
                                                                                                         ParamType.String,
                                                                                                       ),
                                                                                                     }.withoutNulls,
@@ -1401,21 +1722,311 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                                   ),
                                                                 ),
                                                               ),
-                                                            ),
-                                                          ],
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                if (_model.choiceChipsValue == 'email')
+                                  Expanded(
+                                    child: FutureBuilder<List<UsersRecord>>(
+                                      future: queryUsersRecordOnce(
+                                        queryBuilder: (usersRecord) =>
+                                            usersRecord.where(
+                                          'email',
+                                          isEqualTo: _model
+                                              .targetUserTextController.text,
+                                        ),
+                                      ),
+                                      builder: (context, snapshot) {
+                                        // Customize what your widget looks like when it's loading.
+                                        if (!snapshot.hasData) {
+                                          return Center(
+                                            child: SizedBox(
+                                              width: 50.0,
+                                              height: 50.0,
+                                              child: CircularProgressIndicator(
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                                ),
                                               ),
                                             ),
                                           );
-                                        },
-                                      );
-                                    },
+                                        }
+                                        List<UsersRecord>
+                                            emailAdminViewUsersRecordList =
+                                            snapshot.data!
+                                                .where((u) =>
+                                                    u.uid != currentUserUid)
+                                                .toList();
+
+                                        return ListView.separated(
+                                          padding: EdgeInsets.fromLTRB(
+                                            0,
+                                            10.0,
+                                            0,
+                                            10.0,
+                                          ),
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.vertical,
+                                          itemCount:
+                                              emailAdminViewUsersRecordList
+                                                  .length,
+                                          separatorBuilder: (_, __) =>
+                                              SizedBox(height: 1.0),
+                                          itemBuilder:
+                                              (context, emailAdminViewIndex) {
+                                            final emailAdminViewUsersRecord =
+                                                emailAdminViewUsersRecordList[
+                                                    emailAdminViewIndex];
+                                            return Container(
+                                              width: 100.0,
+                                              height: 96.0,
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryBackground,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    blurRadius: 0.0,
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .alternate,
+                                                    offset: Offset(
+                                                      0.0,
+                                                      1.0,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              alignment: AlignmentDirectional(
+                                                  0.0, 0.0),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        5.0, 5.0, 5.0, 5.0),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Flexible(
+                                                      child: Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      0.0,
+                                                                      0.0,
+                                                                      10.0,
+                                                                      0.0),
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Expanded(
+                                                                child: Align(
+                                                                  alignment:
+                                                                      AlignmentDirectional(
+                                                                          0.0,
+                                                                          0.0),
+                                                                  child:
+                                                                      Material(
+                                                                    color: Colors
+                                                                        .transparent,
+                                                                    elevation:
+                                                                        1.0,
+                                                                    shape:
+                                                                        RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              8.0),
+                                                                    ),
+                                                                    child:
+                                                                        Container(
+                                                                      width: double
+                                                                          .infinity,
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .primaryBackground,
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(8.0),
+                                                                        shape: BoxShape
+                                                                            .rectangle,
+                                                                        border:
+                                                                            Border.all(
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).alternate,
+                                                                        ),
+                                                                      ),
+                                                                      alignment:
+                                                                          AlignmentDirectional(
+                                                                              0.0,
+                                                                              0.0),
+                                                                      child:
+                                                                          Align(
+                                                                        alignment: AlignmentDirectional(
+                                                                            0.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding:
+                                                                              EdgeInsets.all(12.0),
+                                                                          child:
+                                                                              SingleChildScrollView(
+                                                                            child:
+                                                                                Column(
+                                                                              mainAxisSize: MainAxisSize.max,
+                                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              children: [
+                                                                                Align(
+                                                                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                  child: Padding(
+                                                                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 16.0, 0.0),
+                                                                                    child: Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 0.0),
+                                                                                          child: Container(
+                                                                                            decoration: BoxDecoration(
+                                                                                              shape: BoxShape.rectangle,
+                                                                                            ),
+                                                                                            alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                            child: Text(
+                                                                                              valueOrDefault<String>(
+                                                                                                emailAdminViewUsersRecord.email,
+                                                                                                'test@email.com',
+                                                                                              ),
+                                                                                              style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                                    fontFamily: 'Readex Pro',
+                                                                                                    color: FlutterFlowTheme.of(context).primary,
+                                                                                                    fontSize: 13.0,
+                                                                                                    letterSpacing: 0.0,
+                                                                                                  ),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 12.0, 0.0),
+                                                                                            child: Text(
+                                                                                              valueOrDefault<String>(
+                                                                                                emailAdminViewUsersRecord.createdTime?.toString(),
+                                                                                                '-',
+                                                                                              ),
+                                                                                              textAlign: TextAlign.end,
+                                                                                              style: FlutterFlowTheme.of(context).bodyLarge.override(
+                                                                                                    fontFamily: 'Readex Pro',
+                                                                                                    fontSize: 13.0,
+                                                                                                    letterSpacing: 0.0,
+                                                                                                  ),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Align(
+                                                                                          alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                          child: StreamBuilder<List<DocumentsRecord>>(
+                                                                                            stream: queryDocumentsRecord(
+                                                                                              queryBuilder: (documentsRecord) => documentsRecord.where(
+                                                                                                'email',
+                                                                                                isEqualTo: emailAdminViewUsersRecord.email,
+                                                                                              ),
+                                                                                            ),
+                                                                                            builder: (context, snapshot) {
+                                                                                              // Customize what your widget looks like when it's loading.
+                                                                                              if (!snapshot.hasData) {
+                                                                                                return Center(
+                                                                                                  child: SizedBox(
+                                                                                                    width: 50.0,
+                                                                                                    height: 50.0,
+                                                                                                    child: CircularProgressIndicator(
+                                                                                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                                                                                        FlutterFlowTheme.of(context).primary,
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                );
+                                                                                              }
+                                                                                              List<DocumentsRecord> iconButtonDocumentsRecordList = snapshot.data!;
+
+                                                                                              return FlutterFlowIconButton(
+                                                                                                borderColor: Colors.transparent,
+                                                                                                borderRadius: 1.0,
+                                                                                                buttonSize: 46.0,
+                                                                                                icon: Icon(
+                                                                                                  Icons.arrow_forward_ios,
+                                                                                                  color: FlutterFlowTheme.of(context).primary,
+                                                                                                  size: 15.0,
+                                                                                                ),
+                                                                                                onPressed: () async {
+                                                                                                  context.pushNamed(
+                                                                                                    'AdminUserDetails',
+                                                                                                    queryParameters: {
+                                                                                                      'targetEmail': serializeParam(
+                                                                                                        emailAdminViewUsersRecord.email,
+                                                                                                        ParamType.String,
+                                                                                                      ),
+                                                                                                    }.withoutNulls,
+                                                                                                  );
+                                                                                                },
+                                                                                              );
+                                                                                            },
+                                                                                          ),
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
                                   ),
-                                ),
                               ],
                             ),
                           ),
