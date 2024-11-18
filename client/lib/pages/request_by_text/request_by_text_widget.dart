@@ -110,7 +110,6 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
           ),
         ],
       ),
-      // Animation
       'containerOnPageLoadAnimation2': AnimationInfo(
         trigger: AnimationTrigger.onPageLoad,
         effectsBuilder: () => [
@@ -1003,33 +1002,51 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                           .spaceBetween,
                                                   children: [
                                                     Align(
-                                                      alignment: AlignmentDirectional(-1.0, 0.0),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              -1.0, 0.0),
                                                       child: RichText(
-                                                        textScaler: MediaQuery.of(context).textScaler,
+                                                        textScaler:
+                                                            MediaQuery.of(
+                                                                    context)
+                                                                .textScaler,
                                                         text: TextSpan(
                                                           children: [
                                                             TextSpan(
-                                                              text: 'Admin Dashboard',
-                                                              style: FlutterFlowTheme.of(context)
+                                                              text:
+                                                                  'Admin Dashboard',
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
                                                                   .bodyLarge
                                                                   .override(
-                                                                    fontFamily: 'Readex Pro',
-                                                                    color: FlutterFlowTheme.of(context).primary,
-                                                                    fontSize: 20.0,
-                                                                    letterSpacing: 0.0,
-                                                                    fontWeight: FontWeight.w600,
+                                                                    fontFamily:
+                                                                        'Readex Pro',
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .primary,
+                                                                    fontSize:
+                                                                        20.0,
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
                                                                   ),
                                                             )
                                                           ],
-                                                          style: FlutterFlowTheme.of(context)
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
                                                               .bodyLarge
                                                               .override(
-                                                                fontFamily: 'Readex Pro',
+                                                                fontFamily:
+                                                                    'Readex Pro',
                                                                 fontSize: 20.0,
-                                                                letterSpacing: 0.0,
+                                                                letterSpacing:
+                                                                    0.0,
                                                               ),
                                                         ),
-                                                        textAlign: TextAlign.start,
+                                                        textAlign:
+                                                            TextAlign.start,
                                                       ),
                                                     ),
                                                     FlutterFlowIconButton(
@@ -1058,22 +1075,34 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 12.0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        16.0, 8.0, 16.0, 12.0),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Expanded(
                                           child: TextFormField(
-                                            controller: _model.targetUserTextController,
-                                            focusNode: _model.targetUserFocusNode,
-                                            onChanged: (_) => EasyDebounce.debounce('_model.targetUserTextController', Duration(milliseconds: 2000), () => safeSetState(() {}),),
+                                            controller:
+                                                _model.targetUserTextController,
+                                            focusNode:
+                                                _model.targetUserFocusNode,
+                                            onChanged: (_) =>
+                                                EasyDebounce.debounce(
+                                              '_model.targetUserTextController',
+                                              Duration(milliseconds: 2000),
+                                              () => safeSetState(() {}),
+                                            ),
                                             autofocus: true,
                                             obscureText: false,
                                             decoration: InputDecoration(
-                                              labelText: 'Search users by email...',
-                                              labelStyle: FlutterFlowTheme.of(context).labelMedium
+                                              labelText:
+                                                  'Search users by email...',
+                                              labelStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .labelMedium
                                                       .override(
-                                                        fontFamily: 'Readex Pro',
+                                                        fontFamily:
+                                                            'Readex Pro',
                                                         letterSpacing: 0.0,
                                                       ),
                                               enabledBorder: OutlineInputBorder(
@@ -1086,7 +1115,9 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                               ),
                                               focusedBorder: OutlineInputBorder(
                                                 borderSide: BorderSide(
-                                                  color: FlutterFlowTheme.of(context).primary,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primary,
                                                   width: 0.5,
                                                 ),
                                                 borderRadius:
@@ -1094,21 +1125,29 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                               ),
                                               errorBorder: OutlineInputBorder(
                                                 borderSide: BorderSide(
-                                                  color: FlutterFlowTheme.of(context).error,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .error,
                                                   width: 0.5,
                                                 ),
-                                                borderRadius: BorderRadius.circular(12.0),
+                                                borderRadius:
+                                                    BorderRadius.circular(12.0),
                                               ),
                                               focusedErrorBorder:
                                                   OutlineInputBorder(
                                                 borderSide: BorderSide(
-                                                  color: FlutterFlowTheme.of(context).error,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .error,
                                                   width: 0.5,
                                                 ),
-                                                borderRadius: BorderRadius.circular(12.0),
+                                                borderRadius:
+                                                    BorderRadius.circular(12.0),
                                               ),
                                               filled: true,
-                                              fillColor: FlutterFlowTheme.of(context).secondaryBackground,
+                                              fillColor:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryBackground,
                                             ),
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyMedium
@@ -1116,11 +1155,15 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                   fontFamily: 'Readex Pro',
                                                   letterSpacing: 0.0,
                                                 ),
-                                            validator: _model.targetUserTextControllerValidator.asValidator(context),
+                                            validator: _model
+                                                .targetUserTextControllerValidator
+                                                .asValidator(context),
                                           ),
                                         ),
                                         Padding(
-                                          padding: EdgeInsetsDirectional.fromSTEB(5.0, 0.0, 0.0, 0.0),
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  5.0, 0.0, 0.0, 0.0),
                                           child: FlutterFlowIconButton(
                                             borderColor: Colors.transparent,
                                             borderRadius: 30.0,
@@ -1128,12 +1171,16 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                             buttonSize: 40.0,
                                             icon: Icon(
                                               Icons.search_rounded,
-                                              color: FlutterFlowTheme.of(context).primaryText,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryText,
                                               size: 15.0,
                                             ),
                                             onPressed: () async {
                                               safeSetState(() {
-                                                _model.choiceChipsValueController?.value = ['email'];
+                                                _model
+                                                    .choiceChipsValueController
+                                                    ?.value = ['email'];
                                               });
                                             },
                                           ),
@@ -1157,29 +1204,42 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                 ChipData('가입 순')
                                               ],
                                               onChanged: (val) async {
-                                                safeSetState(() => _model.choiceChipsValue = val?.firstOrNull);
-                                                if (_model.choiceChipsValue == '전체 조회') {
+                                                safeSetState(() =>
+                                                    _model.choiceChipsValue =
+                                                        val?.firstOrNull);
+                                                if (_model.choiceChipsValue ==
+                                                    '전체 조회') {
                                                   safeSetState(() {
-                                                    _model.choiceChipsValueController?.value = ['default'];
+                                                    _model
+                                                        .choiceChipsValueController
+                                                        ?.value = ['default'];
                                                   });
                                                 } else {
                                                   safeSetState(() {
-                                                    _model.choiceChipsValueController?.value = ['created'];
+                                                    _model
+                                                        .choiceChipsValueController
+                                                        ?.value = ['created'];
                                                   });
                                                 }
                                               },
                                               selectedChipStyle: ChipStyle(
                                                 backgroundColor:
-                                                    FlutterFlowTheme.of(context).primary,
-                                                textStyle: FlutterFlowTheme.of(context)
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                textStyle: FlutterFlowTheme.of(
+                                                        context)
                                                     .bodyMedium
                                                     .override(
                                                       fontFamily: 'Readex Pro',
-                                                      color: FlutterFlowTheme.of(context).info,
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .info,
                                                       letterSpacing: 0.0,
                                                     ),
                                                 iconColor:
-                                                    FlutterFlowTheme.of(context).info,
+                                                    FlutterFlowTheme.of(context)
+                                                        .info,
                                                 iconSize: 16.0,
                                                 elevation: 0.0,
                                                 borderRadius:
@@ -1288,48 +1348,80 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                       child:
                                                           SingleChildScrollView(
                                                         child: Column(
-                                                          mainAxisSize: MainAxisSize.max,
-                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
                                                           children: [
                                                             Icon(
                                                               Icons.person,
-                                                              color: FlutterFlowTheme.of(context).primaryText,
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primaryText,
                                                               size: 30.0,
                                                             ),
                                                             Padding(
-                                                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 12.0),
-                                                              child: FutureBuilder<int>(
-                                                                future: queryUsersRecordCount(),
-                                                                builder: (context, snapshot) {
+                                                              padding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          12.0,
+                                                                          0.0,
+                                                                          12.0),
+                                                              child:
+                                                                  FutureBuilder<
+                                                                      int>(
+                                                                future:
+                                                                    queryUsersRecordCount(),
+                                                                builder: (context,
+                                                                    snapshot) {
                                                                   // Customize what your widget looks like when it's loading.
-                                                                  if (!snapshot.hasData) {
+                                                                  if (!snapshot
+                                                                      .hasData) {
                                                                     return Center(
-                                                                      child: SizedBox(
-                                                                        width: 50.0,
-                                                                        height: 50.0,
-                                                                        child: CircularProgressIndicator(
-                                                                          valueColor: AlwaysStoppedAnimation<Color>(
+                                                                      child:
+                                                                          SizedBox(
+                                                                        width:
+                                                                            50.0,
+                                                                        height:
+                                                                            50.0,
+                                                                        child:
+                                                                            CircularProgressIndicator(
+                                                                          valueColor:
+                                                                              AlwaysStoppedAnimation<Color>(
                                                                             FlutterFlowTheme.of(context).primary,
                                                                           ),
                                                                         ),
                                                                       ),
                                                                     );
                                                                   }
-                                                                  int studyTimeCount = snapshot.data!;
+                                                                  int studyTimeCount =
+                                                                      snapshot
+                                                                          .data!;
 
                                                                   return Text(
-                                                                    valueOrDefault<String>(
-                                                                      studyTimeCount.toString(),
+                                                                    valueOrDefault<
+                                                                        String>(
+                                                                      studyTimeCount
+                                                                          .toString(),
                                                                       '-',
                                                                     ),
-                                                                    textAlign: TextAlign.center,
-                                                                    style: FlutterFlowTheme.of(context)
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
                                                                         .displaySmall
                                                                         .override(
-                                                                          fontFamily: 'Outfit',
-                                                                          fontSize: 20.0,
-                                                                          letterSpacing: 0.0,
-                                                                          fontWeight: FontWeight.normal,
+                                                                          fontFamily:
+                                                                              'Outfit',
+                                                                          fontSize:
+                                                                              20.0,
+                                                                          letterSpacing:
+                                                                              0.0,
+                                                                          fontWeight:
+                                                                              FontWeight.normal,
                                                                         ),
                                                                   );
                                                                 },
@@ -1337,77 +1429,135 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                             ),
                                                             Text(
                                                               '등록 유저 (명)',
-                                                              textAlign: TextAlign.center,
-                                                              style: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                fontFamily: 'Readex Pro',
-                                                                letterSpacing: 0.0,
-                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .labelMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        'Readex Pro',
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                  ),
                                                             ),
                                                           ],
                                                         ),
                                                       ),
                                                     ),
-                                                  ).animateOnPageLoad(animationsMap['containerOnPageLoadAnimation2']!),
+                                                  ).animateOnPageLoad(animationsMap[
+                                                      'containerOnPageLoadAnimation2']!),
                                                   Container(
-                                                    width: MediaQuery.sizeOf(context).width * 0.4,
+                                                    width: MediaQuery.sizeOf(
+                                                                context)
+                                                            .width *
+                                                        0.4,
                                                     height: 160.0,
                                                     decoration: BoxDecoration(
-                                                      color: FlutterFlowTheme.of(context).primary,
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primary,
                                                       boxShadow: [
                                                         BoxShadow(
                                                           blurRadius: 4.0,
-                                                          color: Color(0x33000000),
-                                                          offset: Offset(0.0, 2.0,),
+                                                          color:
+                                                              Color(0x33000000),
+                                                          offset: Offset(
+                                                            0.0,
+                                                            2.0,
+                                                          ),
                                                         )
                                                       ],
-                                                      borderRadius: BorderRadius.circular(24.0),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              24.0),
                                                     ),
-                                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
                                                     child: Padding(
-                                                      padding: EdgeInsets.all(12.0),
+                                                      padding:
+                                                          EdgeInsets.all(12.0),
                                                       child: Column(
-                                                        mainAxisSize: MainAxisSize.min,
-                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
                                                         children: [
                                                           Icon(
                                                             Icons.menu_book,
-                                                            color: FlutterFlowTheme.of(context).info,
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .info,
                                                             size: 30.0,
                                                           ),
                                                           Flexible(
                                                             child: Padding(
-                                                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 12.0),
-                                                              child: FutureBuilder<int>(
-                                                                future: queryDocumentsRecordCount(),
-                                                                builder: (context, snapshot) {
-                                                                  if (!snapshot.hasData) {
+                                                              padding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          12.0,
+                                                                          0.0,
+                                                                          12.0),
+                                                              child:
+                                                                  FutureBuilder<
+                                                                      int>(
+                                                                future:
+                                                                    queryDocumentsRecordCount(),
+                                                                builder: (context,
+                                                                    snapshot) {
+                                                                  // Customize what your widget looks like when it's loading.
+                                                                  if (!snapshot
+                                                                      .hasData) {
                                                                     return Center(
-                                                                      child: SizedBox(
-                                                                        width: 50.0,
-                                                                        height: 50.0,
-                                                                        child: CircularProgressIndicator(
-                                                                          valueColor: AlwaysStoppedAnimation<Color>(FlutterFlowTheme.of(context).primary,
+                                                                      child:
+                                                                          SizedBox(
+                                                                        width:
+                                                                            50.0,
+                                                                        height:
+                                                                            50.0,
+                                                                        child:
+                                                                            CircularProgressIndicator(
+                                                                          valueColor:
+                                                                              AlwaysStoppedAnimation<Color>(
+                                                                            FlutterFlowTheme.of(context).primary,
                                                                           ),
                                                                         ),
                                                                       ),
                                                                     );
                                                                   }
-                                                                  int lastStudyCount = snapshot.data!;
+                                                                  int lastStudyCount =
+                                                                      snapshot
+                                                                          .data!;
 
                                                                   return Text(
-                                                                    valueOrDefault<String>(
-                                                                      lastStudyCount.toString(),
+                                                                    valueOrDefault<
+                                                                        String>(
+                                                                      lastStudyCount
+                                                                          .toString(),
                                                                       '-',
                                                                     ),
-                                                                    textAlign: TextAlign.center,
-                                                                    style: FlutterFlowTheme.of(context)
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
                                                                         .displaySmall
                                                                         .override(
-                                                                          fontFamily: 'Outfit',
-                                                                          color: FlutterFlowTheme.of(context).info,
-                                                                          fontSize: 20.0,
-                                                                          letterSpacing: 0.0,
-                                                                          fontWeight: FontWeight.normal,
+                                                                          fontFamily:
+                                                                              'Outfit',
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).info,
+                                                                          fontSize:
+                                                                              20.0,
+                                                                          letterSpacing:
+                                                                              0.0,
+                                                                          fontWeight:
+                                                                              FontWeight.normal,
                                                                         ),
                                                                   );
                                                                 },
@@ -1446,65 +1596,127 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
-                                        // (기본) 전체 조회
-                                        if (_model.choiceChipsValue == 'default')
+                                        if (_model.choiceChipsValue ==
+                                            'default')
                                           Expanded(
-                                            child: FutureBuilder<List<DocumentsRecord>>(
-                                              future: queryDocumentsRecordOnce(),
+                                            child: FutureBuilder<
+                                                List<DocumentsRecord>>(
+                                              future:
+                                                  queryDocumentsRecordOnce(),
                                               builder: (context, snapshot) {
+                                                // Customize what your widget looks like when it's loading.
                                                 if (!snapshot.hasData) {
                                                   return Center(
                                                     child: SizedBox(
                                                       width: 50.0,
                                                       height: 50.0,
-                                                      child: CircularProgressIndicator(
-                                                        valueColor: AlwaysStoppedAnimation<Color>(FlutterFlowTheme.of(context).primary,
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                        valueColor:
+                                                            AlwaysStoppedAnimation<
+                                                                Color>(
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primary,
                                                         ),
                                                       ),
                                                     ),
                                                   );
                                                 }
-                                                List<DocumentsRecord>emailAdminViewDocumentsRecordList = snapshot.data!;
+                                                List<DocumentsRecord>
+                                                    emailAdminViewDocumentsRecordList =
+                                                    snapshot.data!;
+
                                                 return ListView.separated(
-                                                  padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0,),
+                                                  padding: EdgeInsets.fromLTRB(
+                                                    0,
+                                                    10.0,
+                                                    0,
+                                                    10.0,
+                                                  ),
                                                   shrinkWrap: true,
-                                                  scrollDirection: Axis.vertical,
-                                                  itemCount: emailAdminViewDocumentsRecordList.length,
-                                                  separatorBuilder: (_, __) => SizedBox(height: 1.0),
-                                                  itemBuilder: (context, emailAdminViewIndex) {
-                                                    final emailAdminViewDocumentsRecord = emailAdminViewDocumentsRecordList[emailAdminViewIndex];
+                                                  scrollDirection:
+                                                      Axis.vertical,
+                                                  itemCount:
+                                                      emailAdminViewDocumentsRecordList
+                                                          .length,
+                                                  separatorBuilder: (_, __) =>
+                                                      SizedBox(height: 1.0),
+                                                  itemBuilder: (context,
+                                                      emailAdminViewIndex) {
+                                                    final emailAdminViewDocumentsRecord =
+                                                        emailAdminViewDocumentsRecordList[
+                                                            emailAdminViewIndex];
                                                     return Container(
                                                       width: 100.0,
                                                       height: 96.0,
-                                                      decoration: BoxDecoration(color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .secondaryBackground,
                                                         boxShadow: [
                                                           BoxShadow(
                                                             blurRadius: 0.0,
-                                                            color: FlutterFlowTheme.of(context).alternate,
-                                                            offset: Offset(0.0, 1.0,),
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .alternate,
+                                                            offset: Offset(
+                                                              0.0,
+                                                              1.0,
+                                                            ),
                                                           )
                                                         ],
                                                       ),
-                                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
                                                       child: Align(
-                                                        alignment: AlignmentDirectional(0.0, 0.0),
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0.0, 0.0),
                                                         child: Padding(
-                                                          padding: EdgeInsetsDirectional.fromSTEB(3.0, 8.0, 3.0, 8.0),
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      3.0,
+                                                                      8.0,
+                                                                      3.0,
+                                                                      8.0),
                                                           child: Row(
-                                                            mainAxisSize: MainAxisSize.max,
-                                                            mainAxisAlignment: MainAxisAlignment.center,
-                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
                                                             children: [
-                                                              Align(
-                                                                alignment: AlignmentDirectional(0.0, 0.0),
-                                                                child: SingleChildScrollView(
+                                                              Flexible(
+                                                                child: Align(
+                                                                  alignment:
+                                                                      AlignmentDirectional(
+                                                                          0.0,
+                                                                          0.0),
                                                                   child: Column(
-                                                                    mainAxisSize: MainAxisSize.max,
-                                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
                                                                     children: [
                                                                       Text(
-                                                                        valueOrDefault<String>(emailAdminViewDocumentsRecord.email, 'test@email.com',),
+                                                                        valueOrDefault<
+                                                                            String>(
+                                                                          emailAdminViewDocumentsRecord
+                                                                              .email,
+                                                                          'test@email.com',
+                                                                        ),
                                                                         style: FlutterFlowTheme.of(context)
                                                                             .titleMedium
                                                                             .override(
@@ -1512,7 +1724,7 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                                               color: FlutterFlowTheme.of(context).primary,
                                                                               fontSize: 8.0,
                                                                               letterSpacing: 0.0,
-                                                                              fontWeight: FontWeight.w600,
+                                                                              fontWeight: FontWeight.w500,
                                                                             ),
                                                                       ),
                                                                     ],
@@ -1521,15 +1733,27 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                               ),
                                                               Expanded(
                                                                 child: Align(
-                                                                  alignment: AlignmentDirectional(0.0, 0.0),
-                                                                  child: SingleChildScrollView(
-                                                                    child: Column(
-                                                                      mainAxisSize: MainAxisSize.max,
-                                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                                  alignment:
+                                                                      AlignmentDirectional(
+                                                                          0.0,
+                                                                          0.0),
+                                                                  child:
+                                                                      SingleChildScrollView(
+                                                                    child:
+                                                                        Column(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .max,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
                                                                       children: [
                                                                         Text(
-                                                                          valueOrDefault<String>(
+                                                                          valueOrDefault<
+                                                                              String>(
                                                                             emailAdminViewDocumentsRecord.target,
                                                                             '-',
                                                                           ),
@@ -1540,7 +1764,7 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                                                 color: FlutterFlowTheme.of(context).primary,
                                                                                 fontSize: 8.0,
                                                                                 letterSpacing: 0.0,
-                                                                                fontWeight: FontWeight.w300,
+                                                                                fontWeight: FontWeight.w500,
                                                                               ),
                                                                         ),
                                                                       ],
@@ -1580,7 +1804,6 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                                               color: FlutterFlowTheme.of(context).primary,
                                                                               fontSize: 8.0,
                                                                               letterSpacing: 0.0,
-                                                                              fontWeight: FontWeight.w300,
                                                                             ),
                                                                       ),
                                                                     ],
@@ -1607,62 +1830,62 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                                           CrossAxisAlignment
                                                                               .start,
                                                                       children: [
-                                                                        Flexible(
-                                                                          child:
-                                                                              Align(
-                                                                            alignment:
-                                                                                AlignmentDirectional(0.0, 0.0),
+                                                                        if (emailAdminViewDocumentsRecord
+                                                                            .hasImgUrl())
+                                                                          Flexible(
                                                                             child:
-                                                                                InkWell(
-                                                                              splashColor: Colors.transparent,
-                                                                              focusColor: Colors.transparent,
-                                                                              hoverColor: Colors.transparent,
-                                                                              highlightColor: Colors.transparent,
-                                                                              onTap: () async {
-                                                                                await Navigator.push(
-                                                                                  context,
-                                                                                  PageTransition(
-                                                                                    type: PageTransitionType.fade,
-                                                                                    child: FlutterFlowExpandedImageView(
-                                                                                      image: Image.network(
-                                                                                        valueOrDefault<String>(
-                                                                                          emailAdminViewDocumentsRecord.imgUrl,
-                                                                                          '-',
+                                                                                Align(
+                                                                              alignment: AlignmentDirectional(0.0, 0.0),
+                                                                              child: InkWell(
+                                                                                splashColor: Colors.transparent,
+                                                                                focusColor: Colors.transparent,
+                                                                                hoverColor: Colors.transparent,
+                                                                                highlightColor: Colors.transparent,
+                                                                                onTap: () async {
+                                                                                  await Navigator.push(
+                                                                                    context,
+                                                                                    PageTransition(
+                                                                                      type: PageTransitionType.fade,
+                                                                                      child: FlutterFlowExpandedImageView(
+                                                                                        image: Image.network(
+                                                                                          valueOrDefault<String>(
+                                                                                            emailAdminViewDocumentsRecord.imgUrl,
+                                                                                            '-',
+                                                                                          ),
+                                                                                          fit: BoxFit.contain,
+                                                                                          alignment: Alignment(0.0, 0.0),
                                                                                         ),
-                                                                                        fit: BoxFit.contain,
-                                                                                        alignment: Alignment(0.0, 0.0),
+                                                                                        allowRotation: false,
+                                                                                        tag: valueOrDefault<String>(
+                                                                                          emailAdminViewDocumentsRecord.imgUrl,
+                                                                                          '-' + '$emailAdminViewIndex',
+                                                                                        ),
+                                                                                        useHeroAnimation: true,
                                                                                       ),
-                                                                                      allowRotation: false,
-                                                                                      tag: valueOrDefault<String>(
-                                                                                        emailAdminViewDocumentsRecord.imgUrl,
-                                                                                        '-' + '$emailAdminViewIndex',
-                                                                                      ),
-                                                                                      useHeroAnimation: true,
                                                                                     ),
+                                                                                  );
+                                                                                },
+                                                                                child: Hero(
+                                                                                  tag: valueOrDefault<String>(
+                                                                                    emailAdminViewDocumentsRecord.imgUrl,
+                                                                                    '-' + '$emailAdminViewIndex',
                                                                                   ),
-                                                                                );
-                                                                              },
-                                                                              child: Hero(
-                                                                                tag: valueOrDefault<String>(
-                                                                                  emailAdminViewDocumentsRecord.imgUrl,
-                                                                                  '-' + '$emailAdminViewIndex',
-                                                                                ),
-                                                                                transitionOnUserGestures: true,
-                                                                                child: ClipRRect(
-                                                                                  borderRadius: BorderRadius.circular(8.0),
-                                                                                  child: Image.network(
-                                                                                    valueOrDefault<String>(
-                                                                                      emailAdminViewDocumentsRecord.imgUrl,
-                                                                                      '-',
+                                                                                  transitionOnUserGestures: true,
+                                                                                  child: ClipRRect(
+                                                                                    borderRadius: BorderRadius.circular(8.0),
+                                                                                    child: Image.network(
+                                                                                      valueOrDefault<String>(
+                                                                                        emailAdminViewDocumentsRecord.imgUrl,
+                                                                                        '-',
+                                                                                      ),
+                                                                                      fit: BoxFit.fill,
+                                                                                      alignment: Alignment(0.0, 0.0),
                                                                                     ),
-                                                                                    fit: BoxFit.fill,
-                                                                                    alignment: Alignment(0.0, 0.0),
                                                                                   ),
                                                                                 ),
                                                                               ),
                                                                             ),
                                                                           ),
-                                                                        ),
                                                                       ],
                                                                     ),
                                                                   ),
@@ -1800,18 +2023,23 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 12.0),
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        16.0, 8.0, 16.0, 12.0),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
-                                        // email 검색 조회
                                         if (_model.choiceChipsValue == 'email')
                                           Expanded(
-                                            child: FutureBuilder<List<DocumentsRecord>>(
+                                            child: FutureBuilder<
+                                                List<DocumentsRecord>>(
                                               future: queryDocumentsRecordOnce(
-                                                queryBuilder: (documentsRecord) => documentsRecord.where(
+                                                queryBuilder:
+                                                    (documentsRecord) =>
+                                                        documentsRecord.where(
                                                   'email',
-                                                  isEqualTo: _model.targetUserTextController.text,
+                                                  isEqualTo: _model
+                                                      .targetUserTextController
+                                                      .text,
                                                 ),
                                               ),
                                               builder: (context, snapshot) {
@@ -2021,85 +2249,86 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                                   ),
                                                                 ),
                                                               ),
-                                                              Flexible(
-                                                                child: Align(
-                                                                  alignment:
-                                                                      AlignmentDirectional(
-                                                                          0.0,
-                                                                          0.0),
-                                                                  child: Column(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .max,
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .center,
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      if (emailAdminViewDocumentsRecord
-                                                                          .hasImgUrl())
-                                                                        Flexible(
-                                                                          child:
-                                                                              Align(
-                                                                            alignment:
-                                                                                AlignmentDirectional(0.0, 0.0),
+                                                              if (emailAdminViewDocumentsRecord
+                                                                  .hasImgUrl())
+                                                                Flexible(
+                                                                  child: Align(
+                                                                    alignment:
+                                                                        AlignmentDirectional(
+                                                                            0.0,
+                                                                            0.0),
+                                                                    child:
+                                                                        Column(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .max,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        if (emailAdminViewDocumentsRecord
+                                                                            .hasImgUrl())
+                                                                          Flexible(
                                                                             child:
-                                                                                InkWell(
-                                                                              splashColor: Colors.transparent,
-                                                                              focusColor: Colors.transparent,
-                                                                              hoverColor: Colors.transparent,
-                                                                              highlightColor: Colors.transparent,
-                                                                              onTap: () async {
-                                                                                await Navigator.push(
-                                                                                  context,
-                                                                                  PageTransition(
-                                                                                    type: PageTransitionType.fade,
-                                                                                    child: FlutterFlowExpandedImageView(
-                                                                                      image: Image.network(
-                                                                                        valueOrDefault<String>(
-                                                                                          emailAdminViewDocumentsRecord.imgUrl,
-                                                                                          '-',
+                                                                                Align(
+                                                                              alignment: AlignmentDirectional(0.0, 0.0),
+                                                                              child: InkWell(
+                                                                                splashColor: Colors.transparent,
+                                                                                focusColor: Colors.transparent,
+                                                                                hoverColor: Colors.transparent,
+                                                                                highlightColor: Colors.transparent,
+                                                                                onTap: () async {
+                                                                                  await Navigator.push(
+                                                                                    context,
+                                                                                    PageTransition(
+                                                                                      type: PageTransitionType.fade,
+                                                                                      child: FlutterFlowExpandedImageView(
+                                                                                        image: Image.network(
+                                                                                          valueOrDefault<String>(
+                                                                                            emailAdminViewDocumentsRecord.imgUrl,
+                                                                                            '-',
+                                                                                          ),
+                                                                                          fit: BoxFit.contain,
+                                                                                          alignment: Alignment(0.0, 0.0),
                                                                                         ),
-                                                                                        fit: BoxFit.contain,
-                                                                                        alignment: Alignment(0.0, 0.0),
+                                                                                        allowRotation: false,
+                                                                                        tag: valueOrDefault<String>(
+                                                                                          emailAdminViewDocumentsRecord.imgUrl,
+                                                                                          '-' + '$emailAdminViewIndex',
+                                                                                        ),
+                                                                                        useHeroAnimation: true,
                                                                                       ),
-                                                                                      allowRotation: false,
-                                                                                      tag: valueOrDefault<String>(
-                                                                                        emailAdminViewDocumentsRecord.imgUrl,
-                                                                                        '-' + '$emailAdminViewIndex',
-                                                                                      ),
-                                                                                      useHeroAnimation: true,
                                                                                     ),
+                                                                                  );
+                                                                                },
+                                                                                child: Hero(
+                                                                                  tag: valueOrDefault<String>(
+                                                                                    emailAdminViewDocumentsRecord.imgUrl,
+                                                                                    '-' + '$emailAdminViewIndex',
                                                                                   ),
-                                                                                );
-                                                                              },
-                                                                              child: Hero(
-                                                                                tag: valueOrDefault<String>(
-                                                                                  emailAdminViewDocumentsRecord.imgUrl,
-                                                                                  '-' + '$emailAdminViewIndex',
-                                                                                ),
-                                                                                transitionOnUserGestures: true,
-                                                                                child: ClipRRect(
-                                                                                  borderRadius: BorderRadius.circular(8.0),
-                                                                                  child: Image.network(
-                                                                                    valueOrDefault<String>(
-                                                                                      emailAdminViewDocumentsRecord.imgUrl,
-                                                                                      '-',
+                                                                                  transitionOnUserGestures: true,
+                                                                                  child: ClipRRect(
+                                                                                    borderRadius: BorderRadius.circular(8.0),
+                                                                                    child: Image.network(
+                                                                                      valueOrDefault<String>(
+                                                                                        emailAdminViewDocumentsRecord.imgUrl,
+                                                                                        '-',
+                                                                                      ),
+                                                                                      fit: BoxFit.fill,
+                                                                                      alignment: Alignment(0.0, 0.0),
                                                                                     ),
-                                                                                    fit: BoxFit.fill,
-                                                                                    alignment: Alignment(0.0, 0.0),
                                                                                   ),
                                                                                 ),
                                                                               ),
                                                                             ),
                                                                           ),
-                                                                        ),
-                                                                    ],
+                                                                      ],
+                                                                    ),
                                                                   ),
                                                                 ),
-                                                              ),
                                                               Flexible(
                                                                 child: Align(
                                                                   alignment:
@@ -2156,6 +2385,7 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                                                 );
                                                                               },
                                                                             );
+                                                                            // Call JellyGrammar
                                                                             _model.adminAnalysisResultByEmail =
                                                                                 await AnalysisCall.call(
                                                                               prompt: emailAdminViewDocumentsRecord.target,
@@ -2234,25 +2464,31 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                   Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      // 계정 생성 순 전체 조회
                                       if (_model.choiceChipsValue == 'created')
                                         Expanded(
-                                          child: FutureBuilder<List<DocumentsRecord>>(
+                                          child: FutureBuilder<
+                                              List<DocumentsRecord>>(
                                             future: queryDocumentsRecordOnce(
-                                              queryBuilder: (documentsRecord) => documentsRecord.orderBy(
-                                                  'created_time',
-                                                  descending: true
-                                              ),
+                                              queryBuilder: (documentsRecord) =>
+                                                  documentsRecord.orderBy(
+                                                      'created_time',
+                                                      descending: true),
                                             ),
                                             builder: (context, snapshot) {
+                                              // Customize what your widget looks like when it's loading.
                                               if (!snapshot.hasData) {
                                                 return Center(
                                                   child: SizedBox(
                                                     width: 50.0,
                                                     height: 50.0,
-                                                    child: CircularProgressIndicator(
-                                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                                        FlutterFlowTheme.of(context).primary,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      valueColor:
+                                                          AlwaysStoppedAnimation<
+                                                              Color>(
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .primary,
                                                       ),
                                                     ),
                                                   ),
@@ -2261,58 +2497,109 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                               List<DocumentsRecord>
                                                   emailAdminViewDocumentsRecordList =
                                                   snapshot.data!;
+
                                               return ListView.separated(
-                                                padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0,),
+                                                padding: EdgeInsets.fromLTRB(
+                                                  0,
+                                                  10.0,
+                                                  0,
+                                                  10.0,
+                                                ),
                                                 shrinkWrap: true,
                                                 scrollDirection: Axis.vertical,
-                                                itemCount: emailAdminViewDocumentsRecordList.length,
-                                                separatorBuilder: (_, __) => SizedBox(height: 1.0),
-                                                itemBuilder: (context, emailAdminViewIndex) {
-                                                  final emailAdminViewDocumentsRecord = emailAdminViewDocumentsRecordList[emailAdminViewIndex];
+                                                itemCount:
+                                                    emailAdminViewDocumentsRecordList
+                                                        .length,
+                                                separatorBuilder: (_, __) =>
+                                                    SizedBox(height: 1.0),
+                                                itemBuilder: (context,
+                                                    emailAdminViewIndex) {
+                                                  final emailAdminViewDocumentsRecord =
+                                                      emailAdminViewDocumentsRecordList[
+                                                          emailAdminViewIndex];
                                                   return Container(
                                                     width: 100.0,
                                                     height: 96.0,
                                                     decoration: BoxDecoration(
-                                                      color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                      color: FlutterFlowTheme
+                                                              .of(context)
+                                                          .secondaryBackground,
                                                       boxShadow: [
                                                         BoxShadow(
                                                           blurRadius: 0.0,
-                                                          color: FlutterFlowTheme.of(context).alternate,
-                                                          offset: Offset(0.0, 1.0,),
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .alternate,
+                                                          offset: Offset(
+                                                            0.0,
+                                                            1.0,
+                                                          ),
                                                         )
                                                       ],
                                                     ),
-                                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
                                                     child: Align(
-                                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                                      alignment:
+                                                          AlignmentDirectional(
+                                                              0.0, 0.0),
                                                       child: Padding(
-                                                        padding: EdgeInsetsDirectional.fromSTEB(3.0, 8.0, 3.0, 8.0),
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    3.0,
+                                                                    8.0,
+                                                                    3.0,
+                                                                    8.0),
                                                         child: Row(
-                                                          mainAxisSize: MainAxisSize.max,
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
                                                           children: [
                                                             Flexible(
                                                               child: Align(
-                                                                alignment: AlignmentDirectional(0.0, 0.0),
+                                                                alignment:
+                                                                    AlignmentDirectional(
+                                                                        0.0,
+                                                                        0.0),
                                                                 child: Column(
-                                                                  mainAxisSize: MainAxisSize.max,
-                                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
                                                                   children: [
                                                                     Text(
-                                                                      valueOrDefault<String>(
-                                                                        emailAdminViewDocumentsRecord.email,
+                                                                      valueOrDefault<
+                                                                          String>(
+                                                                        emailAdminViewDocumentsRecord
+                                                                            .email,
                                                                         'test@email.com',
                                                                       ),
-                                                                      style: FlutterFlowTheme.of(context)
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
                                                                           .titleMedium
                                                                           .override(
-                                                                            fontFamily: 'Readex Pro',
-                                                                            color: FlutterFlowTheme.of(context).primary,
-                                                                            fontSize: 8.0,
-                                                                            letterSpacing: 0.0,
-                                                                            fontWeight: FontWeight.w500,
+                                                                            fontFamily:
+                                                                                'Readex Pro',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).primary,
+                                                                            fontSize:
+                                                                                8.0,
+                                                                            letterSpacing:
+                                                                                0.0,
+                                                                            fontWeight:
+                                                                                FontWeight.w500,
                                                                           ),
                                                                     ),
                                                                   ],
@@ -2321,16 +2608,28 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                             ),
                                                             Expanded(
                                                               child: Align(
-                                                                alignment: AlignmentDirectional(0.0, 0.0),
-                                                                child: SingleChildScrollView(
+                                                                alignment:
+                                                                    AlignmentDirectional(
+                                                                        0.0,
+                                                                        0.0),
+                                                                child:
+                                                                    SingleChildScrollView(
                                                                   child: Column(
-                                                                    mainAxisSize: MainAxisSize.max,
-                                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .center,
                                                                     children: [
                                                                       Text(
-                                                                        valueOrDefault<String>(
-                                                                          emailAdminViewDocumentsRecord.target,
+                                                                        valueOrDefault<
+                                                                            String>(
+                                                                          emailAdminViewDocumentsRecord
+                                                                              .target,
                                                                           '-',
                                                                         ),
                                                                         style: FlutterFlowTheme.of(context)
@@ -2350,43 +2649,68 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                             ),
                                                             Flexible(
                                                               child: Align(
-                                                                alignment: AlignmentDirectional(0.0, 0.0),
+                                                                alignment:
+                                                                    AlignmentDirectional(
+                                                                        0.0,
+                                                                        0.0),
                                                                 child: Column(
-                                                                  mainAxisSize: MainAxisSize.max,
-                                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
                                                                   children: [
                                                                     Text(
-                                                                      valueOrDefault<String>(
+                                                                      valueOrDefault<
+                                                                          String>(
                                                                         dateTimeFormat(
                                                                             "M/d H:mm",
-                                                                            emailAdminViewDocumentsRecord.createdTime
-                                                                        ),
+                                                                            emailAdminViewDocumentsRecord.createdTime),
                                                                         '-',
                                                                       ),
-                                                                      style: FlutterFlowTheme.of(context)
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
                                                                           .titleMedium
                                                                           .override(
-                                                                            fontFamily: 'Readex Pro',
-                                                                            color: FlutterFlowTheme.of(context).primary,
-                                                                            fontSize: 8.0,
-                                                                            letterSpacing: 0.0,
+                                                                            fontFamily:
+                                                                                'Readex Pro',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).primary,
+                                                                            fontSize:
+                                                                                8.0,
+                                                                            letterSpacing:
+                                                                                0.0,
                                                                           ),
                                                                     ),
                                                                   ],
                                                                 ),
                                                               ),
                                                             ),
-                                                            if (emailAdminViewDocumentsRecord.hasImgUrl())
+                                                            if (emailAdminViewDocumentsRecord
+                                                                .hasImgUrl())
                                                               Flexible(
                                                                 child: Align(
-                                                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                                                  alignment:
+                                                                      AlignmentDirectional(
+                                                                          0.0,
+                                                                          0.0),
                                                                   child: Column(
-                                                                    mainAxisSize: MainAxisSize.max,
-                                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
                                                                     children: [
-                                                                      if (emailAdminViewDocumentsRecord.hasImgUrl())
+                                                                      if (emailAdminViewDocumentsRecord
+                                                                          .hasImgUrl())
                                                                         Flexible(
                                                                           child:
                                                                               Align(
@@ -2473,15 +2797,23 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                                           FlutterFlowIconButton(
                                                                         borderColor:
                                                                             Colors.transparent,
-                                                                        borderRadius: 10.0,
-                                                                        borderWidth: 20.0,
-                                                                        buttonSize: 46.0,
-                                                                        icon: Icon(
-                                                                          Icons.arrow_forward_ios,
-                                                                          color: FlutterFlowTheme.of(context).primary,
-                                                                          size: 15.0,
+                                                                        borderRadius:
+                                                                            10.0,
+                                                                        borderWidth:
+                                                                            20.0,
+                                                                        buttonSize:
+                                                                            46.0,
+                                                                        icon:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .arrow_forward_ios,
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).primary,
+                                                                          size:
+                                                                              15.0,
                                                                         ),
-                                                                        onPressed: () async {
+                                                                        onPressed:
+                                                                            () async {
                                                                           await showDialog(
                                                                             context:
                                                                                 context,
@@ -2499,9 +2831,20 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                                               );
                                                                             },
                                                                           );
-                                                                          _model.adminAnalysisSortedResult = await AnalysisCall.call(prompt: emailAdminViewDocumentsRecord.target,);
-                                                                          if ((_model.adminAnalysisSortedResult?.succeeded ?? true)) {
-                                                                            if (getJsonField((_model.adminAnalysisSortedResult?.jsonBody ?? ''), r'''$.result''',) != null) {
+                                                                          // Call JellyGrammar
+                                                                          _model.adminAnalysisSortedResult =
+                                                                              await AnalysisCall.call(
+                                                                            prompt:
+                                                                                emailAdminViewDocumentsRecord.target,
+                                                                          );
+
+                                                                          if ((_model.adminAnalysisSortedResult?.succeeded ??
+                                                                              true)) {
+                                                                            if (getJsonField(
+                                                                                  (_model.adminAnalysisSortedResult?.jsonBody ?? ''),
+                                                                                  r'''$.result''',
+                                                                                ) !=
+                                                                                null) {
                                                                               context.pushNamed(
                                                                                 'ResultAnalysis',
                                                                                 queryParameters: {
