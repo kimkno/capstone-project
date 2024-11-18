@@ -1,11 +1,8 @@
 import '/page_ui/page_ui_icon_button.dart';
 import '/page_ui/page_ui_theme.dart';
 import '/page_ui/page_ui_util.dart';
-import '/page_ui/page_ui_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 import 'request_splash_model.dart';
 export 'request_splash_model.dart';
 
