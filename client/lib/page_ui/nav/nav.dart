@@ -127,21 +127,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'RequestByImage',
           path: '/requestByImage',
-          builder: (context, params) => RequestByImageWidget(
-            targetSentence: params.getParam(
-              'targetSentence',
-              ParamType.String,
-            ),
-            recommends: params.getParam<String>(
-              'recommends',
-              ParamType.String,
-              isList: true,
-            ),
-            isImageOn: params.getParam(
-              'isImageOn',
-              ParamType.bool,
-            ),
-          ),
+          builder: (context, params) => RequestByImageWidget(),
         ),
         FFRoute(
           name: 'RecommendAnalysis',
@@ -171,22 +157,20 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               ParamType.String,
               isList: true,
             ),
+            targetEmail: params.getParam(
+              'targetEmail',
+              ParamType.String,
+            ),
+            searchType: params.getParam(
+              'searchType',
+              ParamType.String,
+            ),
           ),
         ),
         FFRoute(
           name: 'CreateUser',
           path: '/createUser',
           builder: (context, params) => CreateUserWidget(),
-        ),
-        FFRoute(
-          name: 'AdminUserDetails',
-          path: '/adminUserDetails',
-          builder: (context, params) => AdminUserDetailsWidget(
-            targetEmail: params.getParam(
-              'targetEmail',
-              ParamType.String,
-            ),
-          ),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

@@ -1,11 +1,8 @@
 import '/page_ui/page_ui_icon_button.dart';
 import '/page_ui/page_ui_theme.dart';
 import '/page_ui/page_ui_util.dart';
-import '/page_ui/page_ui_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 import 'request_splash_model.dart';
 export 'request_splash_model.dart';
 
@@ -60,7 +57,7 @@ class _RequestSplashWidgetState extends State<RequestSplashWidget> {
               size: 30.0,
             ),
             onPressed: () async {
-              context.pushNamed('RequestByText');
+              context.safePop();
             },
           ),
           title: Text(
@@ -89,8 +86,7 @@ class _RequestSplashWidgetState extends State<RequestSplashWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 100.0, 0.0, 0.0),
+                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 100.0, 0.0, 0.0),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [

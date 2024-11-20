@@ -368,8 +368,6 @@ class _LoginWidgetState extends State<LoginWidget>
                                 ),
                               ),
                             ),
-
-                            // You will have to add an action on this rich text to go to your login page.
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   0.0, 12.0, 0.0, 12.0),

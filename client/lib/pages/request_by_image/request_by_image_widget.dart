@@ -1,31 +1,22 @@
-import 'dart:io';
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/backend.dart';
+import '/backend/firebase_storage/storage.dart';
+import '/backend/gemini/gemini.dart';
 import '/page_ui/page_ui_animations.dart';
 import '/page_ui/page_ui_theme.dart';
 import '/page_ui/page_ui_util.dart';
 import '/page_ui/page_ui_widgets.dart';
+import '/page_ui/upload_data.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'request_by_image_model.dart';
 export 'request_by_image_model.dart';
-import 'package:gallery_picker/gallery_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
-
 
 class RequestByImageWidget extends StatefulWidget {
-  const RequestByImageWidget({
-    super.key,
-    this.targetSentence,
-    this.recommends,
-    bool? isImageOn,
-  }) : this.isImageOn = isImageOn ?? true;
-
-  final String? targetSentence;
-  final List<String>? recommends;
-  final bool isImageOn;
+  const RequestByImageWidget({super.key,});
 
   @override
   State<RequestByImageWidget> createState() => _RequestByImageWidgetState();
@@ -33,7 +24,6 @@ class RequestByImageWidget extends StatefulWidget {
 
 class _RequestByImageWidgetState extends State<RequestByImageWidget>
     with TickerProviderStateMixin {
-  File? selectedMedia;
   late RequestByImageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -134,42 +124,6 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
           centerTitle: false,
           elevation: 2.0,
         ),
-        //
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-          bool hasPermission = await requestGalleryPermission();
-          if (hasPermission) {
-            print('<< Attempting to pick media...');
-            List<MediaFile>? media = await GalleryPicker.pickMedia(
-                context: context,
-                singleMedia: true
-            );
-            if (media != null && media.isNotEmpty) {
-              print('<< Media selected: ${media.length} file(s)');
-              var data = await media.first.getFile();
-              print('<< File path: ${data.path}');
-              setState(() {
-                selectedMedia = data;
-              });
-              if (selectedMedia != null) {
-                print('<< Selected media file: ${selectedMedia?.path}');
-                print('<< Selected media file size: ${selectedMedia?.lengthSync()} bytes');
-                String extractedText = await _extractText(selectedMedia!);
-                print('<< Extracted text: $extractedText');
-                setState(() {
-                  _model.targetTextController.text = extractedText;
-                });
-              }
-            } else {
-              print('<< No media selected');
-            }
-          } else {
-            print("Gallery permission denied");
-          }
-        },
-        child: const Icon(Icons.add,),
-        ),
-        //
         body: SafeArea(
           top: true,
           child: Stack(
@@ -253,8 +207,7 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                         labelColor: Color(0xFF101213),
                                         unselectedLabelColor: Color(0xFF57636C),
                                         labelPadding:
-                                            EdgeInsetsDirectional.fromSTEB(
-                                                32.0, 0.0, 32.0, 0.0),
+                                            EdgeInsetsDirectional.fromSTEB(32.0, 0.0, 32.0, 0.0),
                                         labelStyle: FlutterFlowTheme.of(context)
                                             .titleMedium
                                             .override(
@@ -267,8 +220,7 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                         unselectedLabelStyle:
                                             FlutterFlowTheme.of(context)
                                                 .titleMedium
-                                                .override(
-                                                  fontFamily: 'Ubuntu',
+                                                .override(fontFamily: 'Ubuntu',
                                                   color: Colors.white,
                                                   fontSize: 18.0,
                                                   letterSpacing: 0.0,
@@ -295,387 +247,282 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                             alignment: AlignmentDirectional(0.0, -1.0),
                                             child: Padding(
                                               padding: EdgeInsetsDirectional.fromSTEB(24.0, 16.0, 24.0, 0.0),
-                                              child: SingleChildScrollView(
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                              child: SingleChildScrollView(child:Column(mainAxisSize: MainAxisSize.max,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    if (responsiveVisibility(
-                                                      context: context,
-                                                      phone: false,
-                                                      tablet: false,
-                                                    ))
-                                                      Container(
-                                                        width: 230.0,
-                                                        height: 40.0,
-                                                        decoration:
-                                                            BoxDecoration(color: Colors.white,),
-                                                      ),
-                                                    Align(
-                                                      alignment:
-                                                      AlignmentDirectional(
-                                                          0.0, 0.0),
+                                                    Align(alignment: AlignmentDirectional(0.0, 0.0),
                                                       child: Padding(
-                                                        padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                            0.0,
-                                                            0.0,
-                                                            0.0,
-                                                            16.0),
-                                                        child: Container(
-                                                          width: double.infinity,
-                                                          child:
-                                                          TextFormField(
-                                                            controller: _model.targetTextController,
-                                                            focusNode: _model.targetFocusNode,
-                                                            autofocus:
-                                                            true,
-                                                            obscureText:
-                                                            false,
-                                                            decoration:
-                                                            InputDecoration(
-                                                              labelText:
-                                                              'enter here',
-                                                              labelStyle: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                fontFamily: 'Readex Pro',
-                                                                color: Color(0xFF57636C),
-                                                                letterSpacing: 0.0,
-                                                              ),
-                                                              enabledBorder: OutlineInputBorder(
-                                                                borderSide: BorderSide(color: Color(0xFFE0E3E7), width: 2.0,),
-                                                                borderRadius: BorderRadius.circular(8.0),
-                                                              ),
-                                                              focusedBorder: OutlineInputBorder(
-                                                                borderSide: BorderSide(color: Color(0xFF4B39EF), width: 2.0,),
-                                                                borderRadius: BorderRadius.circular(8.0),
-                                                              ),
-                                                              errorBorder: OutlineInputBorder(
-                                                                borderSide: BorderSide(color: Color(0xFFFF5963), width: 2.0,),
-                                                                borderRadius: BorderRadius.circular(8.0),
-                                                              ),
-                                                              focusedErrorBorder: OutlineInputBorder(
-                                                                borderSide: BorderSide(color: Color(0xFFFF5963), width: 2.0,),
-                                                                borderRadius: BorderRadius.circular(8.0),
-                                                              ),
-                                                              filled: true,
-                                                              fillColor: Colors.white,
-                                                              contentPadding: EdgeInsets.all(12.0),),
-                                                            style: GoogleFonts.getFont('Plus Jakarta Sans', color: Color(0xFF57636C), fontWeight: FontWeight.normal, fontSize: 14.0,
-                                                            ),
-                                                            textAlign:
-                                                            TextAlign
-                                                                .justify,
-                                                            maxLines: 16,
-                                                            minLines: 6,
-                                                            keyboardType:
-                                                            TextInputType
-                                                                .emailAddress,
-                                                            validator: _model
-                                                                .targetTextControllerValidator
-                                                                .asValidator(
-                                                                context),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: Container(
-                                                        width: 328.0,
-                                                        height: 100.0,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .secondaryBackground,
-                                                        ),
-                                                        child: Container(
-                                                          width: 100.0,
-                                                          height: 100.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .secondaryBackground,
-                                                          ),
-                                                          child: Align(
-                                                            alignment:
-                                                                AlignmentDirectional(
-                                                                    0.0, 0.0),
-                                                            child: Padding(
-                                                              padding:
-                                                                  EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          0.0,
-                                                                          0.0,
-                                                                          5.0,
-                                                                          16.0),
-                                                              child:
-                                                                  FFButtonWidget(
-                                                                onPressed:
-                                                                    () async {
-                                                                  // Call JellyGrammar
-                                                                  _model.analysisResult =
-                                                                      await AnalysisCall
-                                                                          .call(
-                                                                    prompt: _model
-                                                                        .targetTextController
-                                                                        .text,
-                                                                  );
+                                                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 0.0, 5.0),
+                                                        child: InkWell(
+                                                          splashColor: Colors.transparent,
+                                                          focusColor: Colors.transparent,
+                                                          hoverColor: Colors.transparent,
+                                                          highlightColor: Colors.transparent,
+                                                          onTap: () async {
+                                                            final selectedMedia = await selectMediaWithSourceBottomSheet(
+                                                              context: context,
+                                                              allowPhoto: true,
+                                                            );
+                                                            if (selectedMedia != null && selectedMedia.every((m) => validateFileFormat(m.storagePath, context))) {
+                                                              safeSetState(() => _model.isDataUploading = true);
+                                                              var selectedUploadedFiles = <FFUploadedFile>[];
+                                                              var downloadUrls = <String>[];
+                                                              try {
+                                                                selectedUploadedFiles = selectedMedia.map((m) => FFUploadedFile(
+                                                                  name: m.storagePath.split('/').last,
+                                                                  bytes: m.bytes,
+                                                                  height: m.dimensions?.height,
+                                                                  width: m.dimensions?.width,
+                                                                  blurHash: m.blurHash,
+                                                                )).toList();
+                                                                downloadUrls = (
+                                                                    await Future.wait(
+                                                                      selectedMedia.map((m) async => await uploadData(
+                                                                          m.storagePath, 
+                                                                          m.bytes
+                                                                      )),
+                                                                    )
+                                                                ).where((u) => u != null).map((u) => u!).toList();
+                                                              } finally {
+                                                                _model.isDataUploading = false;
+                                                              }
+                                                              if (selectedUploadedFiles.length == selectedMedia.length && downloadUrls.length == selectedMedia.length) {
+                                                                safeSetState(() {
+                                                                  _model.uploadedLocalFile =   selectedUploadedFiles.first;
+                                                                  _model.uploadedFileUrl =   downloadUrls.first;
+                                                                });
+                                                              } else {
+                                                                safeSetState(() {});
+                                                                return;
+                                                              }
+                                                            }
 
-                                                                  if ((_model
-                                                                          .analysisResult
-                                                                          ?.succeeded ??
-                                                                      true)) {
-                                                                    if (getJsonField(
-                                                                          (_model.analysisResult?.jsonBody ??
-                                                                              ''),
-                                                                          r'''$.result''',
-                                                                        ) !=
-                                                                        null) {
-                                                                      context
-                                                                          .pushNamed(
-                                                                        'ResultAnalysis',
-                                                                        queryParameters:
-                                                                            {
-                                                                          'inKr':
-                                                                              serializeParam(
-                                                                            getJsonField(
-                                                                              (_model.analysisResult?.jsonBody ?? ''),
-                                                                              r'''$.kr''',
-                                                                            ).toString(),
-                                                                            ParamType.String,
-                                                                          ),
-                                                                          'result':
-                                                                              serializeParam(
-                                                                            getJsonField(
-                                                                              (_model.analysisResult?.jsonBody ?? ''),
-                                                                              r'''$.result.*''',
-                                                                            ),
-                                                                            ParamType.JSON,
-                                                                          ),
-                                                                        }.withoutNulls,
-                                                                      );
-                                                                    } else {
-                                                                      context
-                                                                          .pushNamed(
-                                                                        'RequestSplash',
-                                                                        queryParameters:
-                                                                            {
-                                                                          'targetSentence':
-                                                                              serializeParam(
-                                                                            '유효하지 않은 문장입니다!',
-                                                                            ParamType.String,
-                                                                          ),
-                                                                        }.withoutNulls,
-                                                                      );
-                                                                    }
-                                                                  } else {
-                                                                    context
-                                                                        .pushNamed(
-                                                                      'RequestSplash',
-                                                                      queryParameters:
-                                                                          {
-                                                                        'targetSentence':
-                                                                            serializeParam(
-                                                                          '네트워크 오류로 분석이 실패했습니다!',
-                                                                          ParamType
-                                                                              .String,
-                                                                        ),
-                                                                      }.withoutNulls,
-                                                                    );
-                                                                  }
+                                                            await showDialog(
+                                                              context: context,
+                                                              builder: (alertDialogContext) {
+                                                                return AlertDialog(title: Text('Admin'),
+                                                                  content: Text('텍스트 추출 중입니다. 텍스트가 채워질 때까지 대기해 주세요.'),
+                                                                  actions: [
+                                                                    TextButton(
+                                                                      onPressed: () => Navigator.pop(alertDialogContext),
+                                                                      child: Text('확인'),
+                                                                    ),
+                                                                  ],
+                                                                );
+                                                              },
+                                                            );
+                                                            await geminiTextFromImage(
+                                                              context,
+                                                              '이미지에서 텍스트 추출하고 아무 코멘트 없이 추출한 문장 한 문장으로 반환해 줘',
+                                                              imageNetworkUrl: _model.uploadedFileUrl,
+                                                            ).then((generatedText) {
+                                                              safeSetState(() => _model.textFromImage = generatedText);
+                                                            });
 
-                                                                  safeSetState(
-                                                                      () {});
-                                                                },
-                                                                text: '분석 시작',
-                                                                options:
-                                                                    FFButtonOptions(
-                                                                  width: 300.0,
-                                                                  height: 52.0,
-                                                                  padding: EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          0.0,
-                                                                          0.0,
-                                                                          0.0,
-                                                                          0.0),
-                                                                  iconPadding: EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          0.0,
-                                                                          0.0,
-                                                                          0.0,
-                                                                          0.0),
-                                                                  color: Color(
-                                                                      0xFF4B39EF),
-                                                                  textStyle: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .titleSmall
-                                                                      .override(
-                                                                        fontFamily:
-                                                                            'Plus Jakarta Sans',
-                                                                        color: Colors
-                                                                            .white,
-                                                                        fontSize:
-                                                                            16.0,
-                                                                        letterSpacing:
-                                                                            0.0,
-                                                                        fontWeight:
-                                                                            FontWeight.w500,
-                                                                      ),
-                                                                  elevation:
-                                                                      3.0,
-                                                                  borderSide:
-                                                                      BorderSide(
-                                                                    color: Colors
-                                                                        .transparent,
-                                                                    width: 1.0,
-                                                                  ),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10.0),
-                                                                ),
+                                                            safeSetState(() {
+                                                              _model.targetTextController?.text = _model.textFromImage!;
+                                                              _model.targetFocusNode?.requestFocus();
+                                                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                                _model.targetTextController?.selection = TextSelection.collapsed(offset: _model.targetTextController!.text.length,
+                                                                );
+                                                              });
+                                                            });
+                                                            safeSetState(() {});
+                                                          },
+                                                          child: Container(width: 200.0,
+                                                            height: 100.0,
+                                                            decoration: BoxDecoration(image: DecorationImage(fit: BoxFit.fill,
+                                                                image: Image.network(_model.uploadedFileUrl,).image,
+                                                              ),
+                                                              borderRadius: BorderRadius.circular(4.0),
+                                                              border: Border.all(color: Color(0x79979797),
+                                                                width: 1.0,
                                                               ),
                                                             ),
                                                           ),
                                                         ),
                                                       ),
                                                     ),
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: Container(
-                                                        width: 328.0,
-                                                        height: 100.0,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .secondaryBackground,
-                                                        ),
-                                                        child: Container(
-                                                          width: 100.0,
-                                                          height: 100.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .secondaryBackground,
-                                                          ),
-                                                          child: Align(
-                                                            alignment:
-                                                                AlignmentDirectional(
-                                                                    0.0, 0.0),
-                                                            child: Row(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .min,
-                                                              children: [
-                                                                Align(
-                                                                  alignment:
-                                                                      AlignmentDirectional(
-                                                                          0.0,
-                                                                          0.0),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            0.0,
-                                                                            0.0,
-                                                                            5.0,
-                                                                            16.0),
-                                                                    child:
-                                                                        FFButtonWidget(
-                                                                      onPressed:
-                                                                          () async {
-                                                                        context.pushNamed(
-                                                                            'RequestByText');
-                                                                      },
-                                                                      text:
-                                                                          '텍스트 전환',
-                                                                      icon:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .text_fields,
-                                                                        size:
-                                                                            15.0,
+                                                    Align(alignment: AlignmentDirectional(0.0, 0.0),
+                                                      child: Container(decoration: BoxDecoration(),
+                                                        child: SingleChildScrollView(child: Column(mainAxisSize: MainAxisSize.max,
+                                                            children: [
+                                                              if (_model.uploadedFileUrl != null && _model.uploadedFileUrl != '')
+                                                                Align(alignment: AlignmentDirectional(0.0, 0.0),
+                                                                  child: Container(
+                                                                    width: double.infinity, 
+                                                                    child: TextFormField(
+                                                                      controller: _model.targetTextController,
+                                                                      focusNode: _model.targetFocusNode,
+                                                                      autofocus: true,
+                                                                      obscureText: false,
+                                                                      decoration: InputDecoration(
+                                                                        labelText: 'enter here', 
+                                                                        labelStyle: GoogleFonts.getFont(
+                                                                          'Plus Jakarta Sans',
+                                                                          color: Color(0xFF57636C),
+                                                                          fontWeight: FontWeight.normal,fontSize: 14.0,
+                                                                        ), 
+                                                                        enabledBorder: OutlineInputBorder(
+                                                                          borderSide: BorderSide(color: Color(0xFFE0E3E7), width: 2.0,),
+                                                                          borderRadius: BorderRadius.circular(8.0),
+                                                                        ), 
+                                                                        focusedBorder: OutlineInputBorder(
+                                                                          borderSide: BorderSide(color: Color(0xFF4B39EF), width: 2.0,),
+                                                                          borderRadius: BorderRadius.circular(8.0),
+                                                                        ), 
+                                                                        errorBorder: OutlineInputBorder(
+                                                                          borderSide: BorderSide(color: Color(0xFFFF5963), width: 2.0,),
+                                                                          borderRadius: BorderRadius.circular(8.0),
+                                                                        ), 
+                                                                        focusedErrorBorder: OutlineInputBorder(
+                                                                          borderSide: BorderSide(color: Color(0xFFFF5963), width: 2.0,),
+                                                                          borderRadius: BorderRadius.circular(8.0),
+                                                                        ), 
+                                                                        filled: true, 
+                                                                        fillColor: Colors.white, 
+                                                                        contentPadding: EdgeInsets.all(12.0),
                                                                       ),
-                                                                      options:
-                                                                          FFButtonOptions(
-                                                                        width:
-                                                                            148.0,
-                                                                        height:
-                                                                            52.0,
-                                                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0),
-                                                                        iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0),
-                                                                        color: Color(
-                                                                            0xFF8FADFC),
-                                                                        textStyle: FlutterFlowTheme.of(context)
-                                                                            .titleSmall
-                                                                            .override(
-                                                                              fontFamily: 'Plus Jakarta Sans',
-                                                                              color: Colors.white,
-                                                                              fontSize: 16.0,
-                                                                              letterSpacing: 0.0,
-                                                                              fontWeight: FontWeight.w500,
-                                                                            ),
-                                                                        elevation:
-                                                                            3.0,
-                                                                        borderSide:
-                                                                            BorderSide(
-                                                                          color:
-                                                                              Colors.transparent,
-                                                                          width:
-                                                                              1.0,
-                                                                        ),
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(10.0),
+                                                                      style: GoogleFonts.getFont(
+                                                                        'Plus Jakarta Sans', 
+                                                                        color: Color(0xFF57636C), 
+                                                                        fontWeight: FontWeight.normal, 
+                                                                        fontSize: 14.0,
                                                                       ),
+                                                                      textAlign: TextAlign.justify,
+                                                                      maxLines: 16,
+                                                                      minLines: 6,
+                                                                      keyboardType: TextInputType.emailAddress,
+                                                                      validator: _model.targetTextControllerValidator.asValidator(context),
                                                                     ),
                                                                   ),
                                                                 ),
-                                                                Align(
-                                                                  alignment:
-                                                                      AlignmentDirectional(
-                                                                          1.0,
-                                                                          0.0),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            5.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            16.0),
-                                                                    child:
-                                                                        FFButtonWidget(
-                                                                      onPressed:
-                                                                          () async {
-                                                                        _model.recommendResults =
-                                                                            await RecommendCall.call();
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Align(alignment: AlignmentDirectional(0.0, 0.0),
+                                                      child: Container(width: 328.0,
+                                                        height: 100.0,
+                                                        decoration: BoxDecoration(color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                        ),
+                                                        child: Container(width: 100.0,
+                                                          height: 100.0,
+                                                          decoration: BoxDecoration(
+                                                            color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                          ),
+                                                          child: Align(
+                                                            alignment: AlignmentDirectional(0.0, 0.0),
+                                                            child: Padding(
+                                                              padding: EdgeInsetsDirectional.fromSTEB(0.0,0.0,5.0,16.0),
+                                                              child: FFButtonWidget(
+                                                                onPressed: () async {
+                                                                  _model.analysisResult = await AnalysisCall.call(
+                                                                    prompt: _model.targetTextController.text,
+                                                                  );
+                                                                  if ((_model.analysisResult?.succeeded ?? true)) {
+                                                                    if (getJsonField((_model.analysisResult?.jsonBody ?? ''),r'''$.result''', ) != null) {
+                                                                      context.pushNamed('ResultAnalysis', queryParameters: {
+                                                                          'inKr': serializeParam(getJsonField((_model.analysisResult?.jsonBody ?? ''),   r'''$.kr''', ).toString(), ParamType.String,),'result': serializeParam(getJsonField((_model.analysisResult?.jsonBody ?? ''),   r'''$.result.*''', ), ParamType.JSON,), }.withoutNulls,   );
 
-                                                                        if ((_model.recommendResults?.succeeded ??
-                                                                            true)) {
-                                                                          context
-                                                                              .pushNamed(
+                                                                      await DocumentsRecord.collection.doc().set({...createDocumentsRecordData(
+                                                                          email: currentUserEmail,
+                                                                          target: _model.targetTextController.text,
+                                                                          imgUrl: _model.uploadedFileUrl, 
+                                                                        ), ...mapToFirestore({
+                                                                            'created_time': FieldValue.serverTimestamp(),
+                                                                        })
+                                                                      });
+                                                                    } else {
+                                                                      context.pushNamed('RequestSplash', queryParameters: {
+                                                                          'targetSentence': serializeParam(
+                                                                            '유효하지 않은 문장입니다!', 
+                                                                            ParamType.String
+                                                                          )
+                                                                      }.withoutNulls);
+                                                                    }
+                                                                  } else {
+                                                                    context.pushNamed(
+                                                                      'RequestSplash',
+                                                                      queryParameters: {
+                                                                        'targetSentence': serializeParam(
+                                                                          '네트워크 오류로 분석이 실패했습니다!',
+                                                                          ParamType.String
+                                                                        )
+                                                                      }.withoutNulls);
+                                                                  }
+
+                                                                  safeSetState(() {});
+                                                                },
+                                                                text: '분석 시작',
+                                                                options: FFButtonOptions(width: 300.0,
+                                                                  height: 52.0,
+                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0,0.0,0.0,0.0),
+                                                                  iconPadding: EdgeInsetsDirectional.fromSTEB(0.0,0.0,0.0,0.0),
+                                                                  color: Color(0xFF4B39EF),
+                                                                  textStyle: FlutterFlowTheme.of(context).titleSmall.override(fontFamily: 'Plus Jakarta Sans', color: Colors.white, fontSize: 16.0, letterSpacing: 0.0, fontWeight: FontWeight.w500,   ),
+                                                                  elevation: 3.0,
+                                                                  borderSide: BorderSide(color: Colors.transparent, width: 1.0,
+                                                                  ),
+                                                                  borderRadius: BorderRadius.circular(10.0),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Align(alignment: AlignmentDirectional(0.0, 0.0),
+                                                      child: Container(width: 328.0,
+                                                        height: 100.0,
+                                                        decoration: BoxDecoration(color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                        ),
+                                                        child: Container(width: 100.0,
+                                                          height: 100.0,
+                                                          decoration: BoxDecoration(color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                          ),
+                                                          child: Align(alignment: AlignmentDirectional(0.0, 0.0),
+                                                            child: Row(mainAxisSize:  MainAxisSize.min,
+                                                              children: [
+                                                                Align(alignment: AlignmentDirectional(0.0,0.0),
+                                                                  child: Padding(
+                                                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 5.0, 16.0), 
+                                                                    child: FFButtonWidget(
+                                                                      onPressed: () async {
+                                                                        context.pushNamed('RequestByText');
+                                                                      },
+                                                                      text: '텍스트 전환',
+                                                                      icon: Icon(Icons.text_fields, size: 15.0),
+                                                                      options: FFButtonOptions(
+                                                                        width: 148.0, 
+                                                                        height: 52.0, 
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0), 
+                                                                        iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0), 
+                                                                        color: Color(0xFF8FADFC), 
+                                                                        textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                          fontFamily: 'Plus Jakarta Sans',
+                                                                          color: Colors.white,
+                                                                          fontSize: 16.0,
+                                                                          letterSpacing: 0.0,
+                                                                          fontWeight: FontWeight.w500
+                                                                        ), elevation: 3.0, 
+                                                                        borderSide: BorderSide(color: Colors.transparent,width: 1.0, ), 
+                                                                        borderRadius: BorderRadius.circular(10.0)
+                                                                      )
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Align(alignment: AlignmentDirectional(1.0,0.0),
+                                                                  child: Padding(
+                                                                    padding: EdgeInsetsDirectional.fromSTEB(5.0, 0.0, 0.0, 16.0),
+                                                                    child: FFButtonWidget(
+                                                                      onPressed: () async {
+                                                                        _model.recommendResults = await RecommendCall.call();
+                                                                        if ((_model.recommendResults?.succeeded ?? true)) {
+                                                                          context.pushNamed(
                                                                             'RecommendAnalysis',
-                                                                            queryParameters:
-                                                                                {
+                                                                            queryParameters: {
                                                                               'result': serializeParam(
                                                                                 getJsonField(
                                                                                   (_model.recommendResults?.jsonBody ?? ''),
@@ -691,80 +538,44 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                                                 ),
                                                                                 ParamType.JSON,
                                                                                 isList: true,
-                                                                              ),
-                                                                            }.withoutNulls,
-                                                                          );
+                                                                              )
+                                                                            }.withoutNulls);
                                                                         } else {
                                                                           await showDialog(
-                                                                            context:
-                                                                                context,
-                                                                            builder:
-                                                                                (alertDialogContext) {
+                                                                            context: context,
+                                                                            builder: (alertDialogContext) {
                                                                               return AlertDialog(
                                                                                 title: Text('관리자'),
                                                                                 content: Text('서버 문제가 발생했습니다. 다시 시도해 주세요.'),
                                                                                 actions: [
                                                                                   TextButton(
                                                                                     onPressed: () => Navigator.pop(alertDialogContext),
-                                                                                    child: Text('Ok'),
-                                                                                  ),
-                                                                                ],
-                                                                              );
-                                                                            },
-                                                                          );
+                                                                                    child: Text('Ok')
+                                                                                  )
+                                                                                ]);
+                                                                            });
                                                                         }
-
-                                                                        safeSetState(
-                                                                            () {});
+                                                                        safeSetState(() {});
                                                                       },
-                                                                      text:
-                                                                          '추천',
-                                                                      icon:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .rocket,
-                                                                        size:
-                                                                            15.0,
-                                                                      ),
-                                                                      options:
-                                                                          FFButtonOptions(
-                                                                        width:
-                                                                            148.0,
-                                                                        height:
-                                                                            52.0,
-                                                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0),
-                                                                        iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0),
-                                                                        color: Color(
-                                                                            0xFF8FADFC),
-                                                                        textStyle: FlutterFlowTheme.of(context)
-                                                                            .titleSmall
-                                                                            .override(
-                                                                              fontFamily: 'Plus Jakarta Sans',
-                                                                              color: Colors.white,
-                                                                              fontSize: 16.0,
-                                                                              letterSpacing: 0.0,
-                                                                              fontWeight: FontWeight.w500,
-                                                                            ),
-                                                                        elevation:
-                                                                            3.0,
-                                                                        borderSide:
-                                                                            BorderSide(
-                                                                          color:
-                                                                              Colors.transparent,
-                                                                          width:
-                                                                              1.0,
+                                                                      text: '추천',
+                                                                      icon: Icon(Icons.rocket, size: 15.0),
+                                                                      options: FFButtonOptions(
+                                                                        width: 148.0,
+                                                                        height: 52.0,
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                        iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                        color: Color(0xFF8FADFC),
+                                                                        textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                          fontFamily: 'Plus Jakarta Sans',
+                                                                          color: Colors.white,
+                                                                          fontSize: 16.0,
+                                                                          letterSpacing: 0.0,
+                                                                          fontWeight: FontWeight.w500
                                                                         ),
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(10.0),
-                                                                      ),
+                                                                        elevation: 3.0,
+                                                                        borderSide: BorderSide(color: Colors.transparent,width: 1.0, ),
+                                                                        borderRadius: BorderRadius.circular(10.0)
+                                                                      )
                                                                     ),
                                                                   ),
                                                                 ),
@@ -774,105 +585,43 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                         ),
                                                       ),
                                                     ),
-                                                    Align(
-                                                      alignment:
-                                                          AlignmentDirectional(
-                                                              0.0, 0.0),
-                                                      child: Container(
-                                                        width: 328.0,
+                                                    Align(alignment: AlignmentDirectional(0.0, 0.0),
+                                                      child: Container(width: 328.0,
                                                         height: 100.0,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .secondaryBackground,
+                                                        decoration: BoxDecoration(color: FlutterFlowTheme.of(context).secondaryBackground,
                                                         ),
-                                                        child: Container(
-                                                          width: 100.0,
+                                                        child: Container(width: 100.0,
                                                           height: 100.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .secondaryBackground,
+                                                          decoration: BoxDecoration(color: FlutterFlowTheme.of(context).secondaryBackground,
                                                           ),
-                                                          child: Align(
-                                                            alignment:
-                                                                AlignmentDirectional(
-                                                                    0.0, 0.0),
-                                                            child: Row(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .min,
+                                                          child: Align(alignment: AlignmentDirectional(0.0, 0.0),
+                                                            child: Row(mainAxisSize:  MainAxisSize.min,
                                                               children: [
-                                                                Align(
-                                                                  alignment:
-                                                                      AlignmentDirectional(
-                                                                          1.0,
-                                                                          0.0),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            5.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            16.0),
-                                                                    child:
-                                                                        FFButtonWidget(
-                                                                      onPressed:
-                                                                          () async {
-                                                                        context.pushNamed(
-                                                                            'Login');
-                                                                      },
-                                                                      text:
-                                                                          '로그아웃',
-                                                                      icon:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .key_off,
-                                                                        size:
-                                                                            15.0,
+                                                                Align(alignment: AlignmentDirectional(1.0,0.0),
+                                                                  child: Padding(
+                                                                    padding: EdgeInsetsDirectional.fromSTEB(5.0, 0.0, 0.0, 16.0),
+                                                                    child: FFButtonWidget(
+                                                                      onPressed: () async {context.pushNamed('Login');},
+                                                                      text: '로그아웃',
+                                                                      icon: Icon(Icons.key_off, size: 15.0
                                                                       ),
-                                                                      options:
-                                                                          FFButtonOptions(
-                                                                        width:
-                                                                            300.0,
-                                                                        height:
-                                                                            52.0,
-                                                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0),
-                                                                        iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0),
-                                                                        color: Color(
-                                                                            0xFFA5A5A5),
-                                                                        textStyle: FlutterFlowTheme.of(context)
-                                                                            .titleSmall
-                                                                            .override(
-                                                                              fontFamily: 'Plus Jakarta Sans',
-                                                                              color: Colors.white,
-                                                                              fontSize: 16.0,
-                                                                              letterSpacing: 0.0,
-                                                                              fontWeight: FontWeight.w500,
-                                                                            ),
-                                                                        elevation:
-                                                                            3.0,
-                                                                        borderSide:
-                                                                            BorderSide(
-                                                                          color:
-                                                                              Colors.transparent,
-                                                                          width:
-                                                                              1.0,
+                                                                      options: FFButtonOptions(
+                                                                        width: 300.0,
+                                                                        height: 52.0,
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                        iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                        color: Color(0xFFA5A5A5),
+                                                                        textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                          fontFamily: 'Plus Jakarta Sans',
+                                                                          color: Colors.white,
+                                                                          fontSize: 16.0,
+                                                                          letterSpacing: 0.0,
+                                                                          fontWeight: FontWeight.w500
                                                                         ),
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(10.0),
-                                                                      ),
+                                                                        elevation: 3.0,
+                                                                        borderSide: BorderSide(color: Colors.transparent,width: 1.0, ),
+                                                                        borderRadius: BorderRadius.circular(10.0)
+                                                                      )
                                                                     ),
                                                                   ),
                                                                 ),
@@ -884,8 +633,7 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                                     ),
                                                   ],
                                                 ),
-                                              ).animateOnPageLoad(animationsMap[
-                                                  'columnOnPageLoadAnimation']!),
+                                              ).animateOnPageLoad(animationsMap['columnOnPageLoadAnimation']!),
                                             ),
                                           ),
                                         ],
@@ -894,8 +642,7 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
                                   ],
                                 ),
                               ),
-                            ).animateOnPageLoad(
-                                animationsMap['containerOnPageLoadAnimation']!),
+                            ).animateOnPageLoad(animationsMap['containerOnPageLoadAnimation']!),
                           ),
                         ),
                       ],
@@ -908,45 +655,5 @@ class _RequestByImageWidgetState extends State<RequestByImageWidget>
         ),
       ),
     );
-  }
-  Future<String> _extractText(File imageFile) async {
-    print('<< Extracting text from image...');
-    final inputImage = InputImage.fromFile(imageFile);
-    final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
-    final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
-    print('<< Extracted text: ${recognizedText.text}');
-    return recognizedText.text;
-  }
-
-  Future<bool> requestGalleryPermission() async {
-    final deviceInfo = DeviceInfoPlugin();
-    final androidInfo = await deviceInfo.androidInfo;
-
-    if (androidInfo.version.sdkInt >= 33) {
-      // Android 13 이상
-      PermissionStatus status = await Permission.photos.status;
-      if (status.isGranted) {
-        return true;
-      } else if (status.isDenied) {
-        PermissionStatus newStatus = await Permission.photos.request();
-        return newStatus.isGranted;
-      } else if (status.isPermanentlyDenied) {
-        openAppSettings();
-        return false;
-      }
-    } else {
-      PermissionStatus status = await Permission.storage.status;
-      if (status.isGranted) {
-        return true;
-      } else if (status.isDenied) {
-        PermissionStatus newStatus = await Permission.storage.request();
-        return newStatus.isGranted;
-      } else if (status.isPermanentlyDenied) {
-        openAppSettings();
-        return false;
-      }
-    }
-
-    return false;
   }
 }

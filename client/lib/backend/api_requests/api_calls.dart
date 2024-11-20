@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:typed_data';
+import '../schema/structs/index.dart';
 
 import 'package:flutter/foundation.dart';
+
 import '/page_ui/page_ui_util.dart';
 import 'api_manager.dart';
 
@@ -23,7 +26,7 @@ class AnalysisCall {
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': '{API_KEY}',
+        'x-api-key': 'nyQUGXv71x159ow6944v77BtfT3lNe5RaAhSTMLS',
       },
       params: {},
       body: ffApiRequestBody,
@@ -56,7 +59,7 @@ class RecommendCall {
           'https://bls6x9koja.execute-api.ap-northeast-2.amazonaws.com/default/capstone-recommend?model=gemini-pro&max_output_tokens=8192',
       callType: ApiCallType.POST,
       headers: {
-        'x-api-key': '{API_KEY}',
+        'x-api-key': 'nyQUGXv71x159ow6944v77BtfT3lNe5RaAhSTMLS',
         'Content-Type': 'application/json',
       },
       params: {},

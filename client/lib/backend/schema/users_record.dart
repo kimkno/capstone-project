@@ -36,21 +36,6 @@ class UsersRecord extends FirestoreRecord {
   List<String> get kr => _kr ?? const [];
   bool hasKr() => _kr != null;
 
-  // "histories" field.
-  List<StoreDataStruct>? _histories;
-  List<StoreDataStruct> get histories => _histories ?? const [];
-  bool hasHistories() => _histories != null;
-
-  // "history" field.
-  List<String>? _history;
-  List<String> get history => _history ?? const [];
-  bool hasHistory() => _history != null;
-
-  // "test_histories" field.
-  List<AnalysisResultStruct>? _testHistories;
-  List<AnalysisResultStruct> get testHistories => _testHistories ?? const [];
-  bool hasTestHistories() => _testHistories != null;
-
   // "display_name" field.
   String? _displayName;
   String get displayName => _displayName ?? '';
@@ -71,15 +56,6 @@ class UsersRecord extends FirestoreRecord {
     _uid = snapshotData['uid'] as String?;
     _createdTime = snapshotData['created_time'] as DateTime?;
     _kr = getDataList(snapshotData['kr']);
-    _histories = getStructList(
-      snapshotData['histories'],
-      StoreDataStruct.fromMap,
-    );
-    _history = getDataList(snapshotData['history']);
-    _testHistories = getStructList(
-      snapshotData['test_histories'],
-      AnalysisResultStruct.fromMap,
-    );
     _displayName = snapshotData['display_name'] as String?;
     _phoneNumber = snapshotData['phone_number'] as String?;
     _photoUrl = snapshotData['photo_url'] as String?;
@@ -150,9 +126,6 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e1?.uid == e2?.uid &&
         e1?.createdTime == e2?.createdTime &&
         listEquality.equals(e1?.kr, e2?.kr) &&
-        listEquality.equals(e1?.histories, e2?.histories) &&
-        listEquality.equals(e1?.history, e2?.history) &&
-        listEquality.equals(e1?.testHistories, e2?.testHistories) &&
         e1?.displayName == e2?.displayName &&
         e1?.phoneNumber == e2?.phoneNumber &&
         e1?.photoUrl == e2?.photoUrl;
@@ -164,9 +137,6 @@ class UsersRecordDocumentEquality implements Equality<UsersRecord> {
         e?.uid,
         e?.createdTime,
         e?.kr,
-        e?.histories,
-        e?.history,
-        e?.testHistories,
         e?.displayName,
         e?.phoneNumber,
         e?.photoUrl

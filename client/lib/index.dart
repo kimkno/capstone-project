@@ -11,5 +11,3 @@ export '/pages/recommend_analysis/recommend_analysis_widget.dart'
 export '/pages/request_by_text/request_by_text_widget.dart'
     show RequestByTextWidget;
 export '/pages/create_user/create_user_widget.dart' show CreateUserWidget;
-export '/pages/admin_user_details/admin_user_details_widget.dart'
-    show AdminUserDetailsWidget;
