@@ -562,23 +562,16 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                                               ),
                                                                             }.withoutNulls,
                                                                           );
-
-                                                                          await DocumentsRecord
-                                                                              .collection
-                                                                              .doc()
-                                                                              .set({
+                                                                          // Firebase Docuemnt 업데이트
+                                                                          await DocumentsRecord.collection.doc().set({
+                                                                            // createDocumentsRecordData 함수: email, 질의(target), feedback(분석 결과)를 firebase db에 추가
                                                                             ...createDocumentsRecordData(
                                                                               email: currentUserEmail,
                                                                               target: _model.targetTextController.text,
-                                                                              feedback: getJsonField(
-                                                                                (_model.analysisResult?.jsonBody ?? ''),
-                                                                                r'''$.feedback''',
-                                                                              ).toString(),
+                                                                              feedback: getJsonField((_model.analysisResult?.jsonBody ?? ''), r'''$.feedback''',).toString(),
                                                                             ),
-                                                                            ...mapToFirestore(
-                                                                              {
-                                                                                'created_time': FieldValue.serverTimestamp(),
-                                                                              },
+                                                                            // mapToFirestore 함수: 현재 시간도 추가 기록
+                                                                            ...mapToFirestore({'created_time': FieldValue.serverTimestamp(),},
                                                                             ),
                                                                           });
                                                                         } else {
@@ -1140,33 +1133,19 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                   ChipData('이미지뷰')
                                                 ],
                                                 onChanged: (val) async {
-                                                  safeSetState(() =>
-                                                      _model.choiceChipsValue =
-                                                          val?.firstOrNull);
-                                                  if (_model.choiceChipsValue ==
-                                                      '전체 조회') {
-                                                    safeSetState(() {
-                                                      _model
-                                                          .choiceChipsValueController
-                                                          ?.value = ['default'];
-                                                    });
+                                                  // _model.choiceChipsValue 결과에 따라 각기 다른 listview 출력
+                                                  // 1) 전체 조회: ?.value = ['default']
+                                                  // 2) 일시 순 정렬: ?.value = ['created']
+                                                  // 3) email 검색: ?.value = ['eamil']
+                                                  // 4) 사용자 image 목록: ?.value = ['iamge']
+                                                  safeSetState(() => _model.choiceChipsValue = val?.firstOrNull);
+                                                  if (_model.choiceChipsValue == '전체 조회') {
+                                                    safeSetState(() {_model.choiceChipsValueController?.value = ['default'];});
                                                   } else {
-                                                    if (_model
-                                                            .choiceChipsValue ==
-                                                        '정렬') {
-                                                      safeSetState(() {
-                                                        _model
-                                                            .choiceChipsValueController
-                                                            ?.value = [
-                                                          'created'
-                                                        ];
-                                                      });
+                                                    if (_model.choiceChipsValue == '정렬') {
+                                                      safeSetState(() {_model.choiceChipsValueController?.value = ['created'];});
                                                     } else {
-                                                      safeSetState(() {
-                                                        _model
-                                                            .choiceChipsValueController
-                                                            ?.value = ['image'];
-                                                      });
+                                                      safeSetState(() {_model.choiceChipsValueController?.value = ['image'];});
                                                     }
                                                   }
                                                 },
@@ -1654,6 +1633,9 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                       ],
                                     ),
                                   ),
+                                  // 아래의 Padding 2개가 header row 다른 버전 두 개
+                                  // choiceChipsValue 가 default or email or created 일 때는 기본 header
+                                  // choiceChipsValue 가 image 일 때는 image 용 header 출력
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         5.0, 5.0, 5.0, 5.0),
@@ -1688,6 +1670,8 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: [
+                                                  // 아래의 Expanded 4개가 header colum: 사용자 ID, 질의, feedback, 일시
+                                                  // header 간격 등 조정하려면 style 수정
                                                   Expanded(
                                                     flex: 3,
                                                     child: Align(
@@ -1850,6 +1834,8 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
+                                                // 아래의 Expanded 2개가 header colum: 사용자 ID, image
+                                                // header 간격 등 조정하려면 style 수정
                                                 Expanded(
                                                   flex: 3,
                                                   child: Align(
@@ -1919,6 +1905,12 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                       ],
                                     ),
                                   ),
+                                  // 아래의 Padding 4개가 listview 다른 버전 4 개
+                                  // choiceChipsValue 가 default 일 때 ->
+                                  // choiceChipsValue 가 created 일 때 ->
+                                  // choiceChipsValue 가 email 일 때 ->
+                                  // choiceChipsValue 가 image 일 때 ->
+                                  // 각각 queryDocumentsRecordOnce 의 queryBuilder (query) 내용이 다름
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         5.0, 0.0, 5.0, 0.0),
@@ -1931,8 +1923,8 @@ class _RequestByTextWidgetState extends State<RequestByTextWidget>
                                               child: FutureBuilder<
                                                   List<DocumentsRecord>>(
                                             future: queryDocumentsRecordOnce(),
+                                            // queryDocumentsRecordOnce 함수: firebase db 읽기
                                             builder: (context, snapshot) {
-                                              // Customize what your widget looks like when it's loading.
                                               if (!snapshot.hasData) {
                                                 return Center(
                                                   child: SizedBox(
