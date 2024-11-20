@@ -1,10 +1,10 @@
-import '/backend/api_requests/api_calls.dart';
 import '/page_ui/page_ui_util.dart';
+import '/backend/api_requests/api_calls.dart';
 import '/page_ui/form_field_controller.dart';
 import 'request_by_text_widget.dart' show RequestByTextWidget;
 import 'package:flutter/material.dart';
 
-class RequestByTextModel extends FlutterFlowModel<RequestByTextWidget> {
+class RequestByTextModel extends PageUIModel<RequestByTextWidget> {
   TabController? tabBarController;
   int get tabBarCurrentIndex =>
       tabBarController != null ? tabBarController!.index : 0;

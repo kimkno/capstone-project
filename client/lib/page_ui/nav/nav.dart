@@ -127,21 +127,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'RequestByImage',
           path: '/requestByImage',
-          builder: (context, params) => RequestByImageWidget(
-            targetSentence: params.getParam(
-              'targetSentence',
-              ParamType.String,
-            ),
-            recommends: params.getParam<String>(
-              'recommends',
-              ParamType.String,
-              isList: true,
-            ),
-            isImageOn: params.getParam(
-              'isImageOn',
-              ParamType.bool,
-            ),
-          ),
+          builder: (context, params) => RequestByImageWidget(),
         ),
         FFRoute(
           name: 'RecommendAnalysis',

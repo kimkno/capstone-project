@@ -21,11 +21,6 @@ class DocumentsRecord extends FirestoreRecord {
   String get email => _email ?? '';
   bool hasEmail() => _email != null;
 
-  // "translates" field.
-  List<String>? _translates;
-  List<String> get translates => _translates ?? const [];
-  bool hasTranslates() => _translates != null;
-
   // "created_time" field.
   DateTime? _createdTime;
   DateTime? get createdTime => _createdTime;
@@ -41,12 +36,17 @@ class DocumentsRecord extends FirestoreRecord {
   String get imgUrl => _imgUrl ?? '';
   bool hasImgUrl() => _imgUrl != null;
 
+  // "feedback" field.
+  String? _feedback;
+  String get feedback => _feedback ?? '';
+  bool hasFeedback() => _feedback != null;
+
   void _initializeFields() {
     _email = snapshotData['email'] as String?;
-    _translates = getDataList(snapshotData['translates']);
     _createdTime = snapshotData['created_time'] as DateTime?;
     _target = snapshotData['target'] as String?;
     _imgUrl = snapshotData['img_url'] as String?;
+    _feedback = snapshotData['feedback'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -88,6 +88,7 @@ Map<String, dynamic> createDocumentsRecordData({
   DateTime? createdTime,
   String? target,
   String? imgUrl,
+  String? feedback,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -95,6 +96,7 @@ Map<String, dynamic> createDocumentsRecordData({
       'created_time': createdTime,
       'target': target,
       'img_url': imgUrl,
+      'feedback': feedback,
     }.withoutNulls,
   );
 
@@ -106,17 +108,16 @@ class DocumentsRecordDocumentEquality implements Equality<DocumentsRecord> {
 
   @override
   bool equals(DocumentsRecord? e1, DocumentsRecord? e2) {
-    const listEquality = ListEquality();
     return e1?.email == e2?.email &&
-        listEquality.equals(e1?.translates, e2?.translates) &&
         e1?.createdTime == e2?.createdTime &&
         e1?.target == e2?.target &&
-        e1?.imgUrl == e2?.imgUrl;
+        e1?.imgUrl == e2?.imgUrl &&
+        e1?.feedback == e2?.feedback;
   }
 
   @override
   int hash(DocumentsRecord? e) => const ListEquality()
-      .hash([e?.email, e?.translates, e?.createdTime, e?.target, e?.imgUrl]);
+      .hash([e?.email, e?.createdTime, e?.target, e?.imgUrl, e?.feedback]);
 
   @override
   bool isValidKey(Object? o) => o is DocumentsRecord;

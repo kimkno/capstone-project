@@ -57,7 +57,7 @@ class _RequestSplashWidgetState extends State<RequestSplashWidget> {
               size: 30.0,
             ),
             onPressed: () async {
-              context.pushNamed('RequestByText');
+              context.safePop();
             },
           ),
           title: Text(
@@ -86,8 +86,7 @@ class _RequestSplashWidgetState extends State<RequestSplashWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 100.0, 0.0, 0.0),
+                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 100.0, 0.0, 0.0),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
